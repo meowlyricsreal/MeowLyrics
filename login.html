@@ -1,38 +1,60 @@
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SignUp - MeowLyrics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #FFFDF2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-card { background: white; padding: 40px; border-radius: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; width: 90%; max-width: 400px; }
+        .btn-google { background: #2D3436; color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 800; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
+        .btn-google:hover { transform: translateY(-3px); background: #000; }
+    </style>
+</head>
+<body>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
-        authDomain: "meowlyrics-6eacb.firebaseapp.com",
-        projectId: "meowlyrics-6eacb",
-        appId: "1:183440345480:web:4fb71060be2cc24df0923d"
-    };
+    <div class="login-card">
+        <h2 style="font-weight: 800;">🐾 MeowLyrics</h2>
+        <p style="color: #888; margin-bottom: 30px;">Sila SignUp dengan emel rasmi</p>
+        <button class="btn-google" id="loginBtn">Terus ke Google Login</button>
+        <p id="status" style="margin-top: 15px; font-size: 12px; color: red;"></p>
+    </div>
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app);
-    const provider = new GoogleAuthProvider();
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    const btn = document.getElementById('loginBtn');
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
+            authDomain: "meowlyrics-6eacb.firebaseapp.com",
+            projectId: "meowlyrics-6eacb",
+            appId: "1:183440345480:web:4fb71060be2cc24df0923d"
+        };
 
-    btn.onclick = async () => {
-        try {
-            const result = await signInWithPopup(auth, provider);
-            const user = result.user;
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
+        
+        // Ini fungsi untuk paksa Google tanya "Pilih Akaun Mana"
+        provider.setCustomParameters({ prompt: 'select_account' });
 
-            // KESELAMATAN: Semak adakah ini emel tuan punya MeowLyrics?
-            if (user.email === "meowlyrics1@gmail.com") {
-                alert("Selamat datang, Admin MeowLyrics!");
-                window.location.href = "admin.html"; // Lepas masuk ke panel
-            } else {
-                // Jika orang lain, kita logout kan mereka serta-merta
-                await auth.signOut();
-                alert("AKSES DISEKAT! Hanya meowlyrics1@gmail.com sahaja boleh masuk.");
-                window.location.href = "/"; // Tendang balik ke depan
+        document.getElementById('loginBtn').onclick = async () => {
+            document.getElementById('status').innerText = "Menghubungkan ke Google...";
+            try {
+                const result = await signInWithPopup(auth, provider);
+                if (result.user.email === "meowlyrics1@gmail.com") {
+                    window.location.href = "admin.html";
+                } else {
+                    alert("Akses Ditolak! Hanya MeowLyrics Official sahaja.");
+                    await auth.signOut();
+                    window.location.href = "/";
+                }
+            } catch (error) {
+                document.getElementById('status').innerText = "Meow Ralat: " + error.code;
+                console.error(error);
             }
-        } catch (error) {
-            console.error("Ralat:", error);
-            alert("Ralat Login: " + error.message);
-        }
-    };
-</script>
+        };
+    </script>
+</body>
+</html>
