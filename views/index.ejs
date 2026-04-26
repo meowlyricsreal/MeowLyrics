@@ -3,201 +3,81 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeowLyrics | Pusat Lirik Meow-zik</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Fredoka+One&display=swap" rel="stylesheet">
+    <title>MeowLyrics | Destinasi Lirik Muzik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { 
-            --kuning-cair: #FFFDF2; 
-            --kuning-utama: #FFD32D; 
-            --gelap: #2D3436;
-            --putih: #FFFFFF;
-        }
-
-        body { 
-            font-family: 'Poppins', sans-serif; 
-            background-color: var(--kuning-cair); 
-            margin: 0; 
-            color: var(--gelap);
-            overflow-x: hidden;
-        }
-
-        /* --- NAVIGATION --- */
-        .navbar { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 20px 8%; 
-            background: var(--putih);
-            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
-        }
-
-        .logo { 
-            font-family: 'Fredoka One', cursive;
-            font-size: 28px; 
-            color: var(--kuning-utama); 
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .nav-links a {
-            text-decoration: none;
-            color: #b2bec3;
-            font-weight: 600;
-            margin-left: 25px;
-            transition: 0.3s;
-        }
-
-        .nav-links a.active { color: var(--kuning-utama); }
-
-        /* --- HERO SECTION --- */
-        .hero { 
-            text-align: center; 
-            padding: 80px 20px;
-            background-image: radial-gradient(var(--kuning-utama) 0.5px, transparent 0.5px);
-            background-size: 20px 20px; /* Corak bintik halus */
-        }
-
-        .badge {
-            background: var(--kuning-utama);
-            color: var(--gelap);
-            padding: 6px 20px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            margin-bottom: 20px;
-            display: inline-block;
-        }
-
-        .hero h1 { 
-            font-size: 50px; 
-            font-weight: 800; 
-            margin: 0; 
-            line-height: 1.1;
-        }
-
-        .hero h1 span { color: var(--kuning-utama); }
-
-        /* --- SEARCH BOX --- */
-        .search-wrapper {
-            position: relative;
-            max-width: 600px;
-            margin: 40px auto;
-        }
-
-        .search-input { 
-            width: 100%; 
-            padding: 22px 30px; 
-            border-radius: 100px; 
-            border: none; 
-            box-shadow: 0 15px 35px rgba(255, 211, 45, 0.2); 
-            font-size: 16px; 
-            font-family: inherit;
-            outline: none;
-        }
-
-        .btn-cari { 
-            position: absolute; 
-            right: 10px; 
-            top: 10px; 
-            bottom: 10px; 
-            background: var(--kuning-utama); 
-            border: none; 
-            padding: 0 35px; 
-            border-radius: 100px; 
-            font-weight: 700; 
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-cari:hover { transform: scale(1.05); }
-
-        /* --- CONTENT SECTION --- */
-        .container { padding: 0 8% 50px; }
-
-        .section-title {
-            font-size: 24px;
-            font-weight: 800;
-            margin-bottom: 30px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .section-title::after {
-            content: "";
-            height: 3px;
-            flex-grow: 1;
-            background: #eee;
-        }
-
-        /* --- SONG CARDS --- */
-        .song-grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 25px; 
-        }
-
-        .song-card { 
-            background: var(--putih); 
-            padding: 30px; 
-            border-radius: 30px; 
-            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
-            transition: 0.4s;
-            text-decoration: none;
-            color: inherit;
-            border: 2px solid transparent;
-        }
-
-        .song-card:hover { 
-            transform: translateY(-10px); 
-            border-color: var(--kuning-utama);
-            box-shadow: 0 20px 40px rgba(255, 211, 45, 0.1);
-        }
-
-        .song-card h3 { margin: 0; font-size: 20px; font-weight: 700; color: var(--gelap); }
-        .song-card p { margin: 8px 0 20px; color: #a2a2a2; font-size: 14px; }
+        :root { --main: #FFD32D; --bg: #FFFDF2; --card: rgba(255, 255, 255, 0.8); }
         
-        .btn-view {
-            color: var(--kuning-utama);
-            font-weight: 700;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
+        * { box-sizing: border-box; transition: all 0.3s ease; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; color: #2D3436; }
 
-        #loading { text-align: center; padding: 50px; color: #ccc; font-weight: 600; }
+        /* Background Hiasan */
+        .bg-circle { position: fixed; width: 300px; height: 300px; background: var(--main); filter: blur(100px); border-radius: 50%; opacity: 0.2; z-index: -1; top: -50px; right: -50px; }
+
+        /* Navbar */
+        nav { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; backdrop-filter: blur(10px); sticky; top: 0; z-index: 100; }
+        .logo { font-size: 24px; font-weight: 800; color: #2D3436; text-decoration: none; display: flex; align-items: center; gap: 10px; }
+        .logo span { background: var(--main); padding: 5px 10px; border-radius: 12px; }
+
+        /* Search Area */
+        .hero { padding: 40px 5% 20px; text-align: center; }
+        .search-box { position: relative; max-width: 600px; margin: 0 auto; }
+        .search-bar { width: 100%; padding: 18px 30px; border-radius: 20px; border: 2px solid white; background: white; font-size: 16px; font-weight: 600; box-shadow: 0 15px 35px rgba(255, 211, 45, 0.15); outline: none; }
+        .search-bar:focus { border-color: var(--main); box-shadow: 0 15px 35px rgba(255, 211, 45, 0.3); }
+
+        /* Container */
+        .content { padding: 30px 5%; max-width: 900px; margin: 0 auto; }
+        .section-header { font-weight: 800; font-size: 22px; margin-bottom: 25px; }
+
+        /* Song Card */
+        .song-item { background: var(--card); backdrop-filter: blur(15px); border: 1px solid white; padding: 30px; border-radius: 35px; margin-bottom: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .song-header { border-bottom: 2px solid #F1F2F6; margin-bottom: 20px; padding-bottom: 15px; }
+        .song-title { font-size: 24px; font-weight: 800; margin: 0; }
+        .artist-name { color: #A4B0BE; font-weight: 600; margin-top: 5px; }
+
+        .lyrics-text { font-size: 16px; line-height: 1.8; color: #4b4b4b; white-space: pre-line; margin-bottom: 30px; }
+
+        /* YouTube Styling */
+        .yt-label { font-size: 12px; font-weight: 800; color: #eb4d4b; margin-bottom: 15px; display: flex; align-items: center; gap: 8px; }
+        .video-box { border-radius: 25px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.1); background: #000; aspect-ratio: 16/9; }
+        iframe { width: 100%; height: 100%; border: none; }
+
+        /* Footer & Credits */
+        footer { padding: 60px 5%; text-align: center; background: white; border-radius: 50px 50px 0 0; margin-top: 40px; }
+        .sub-link { background: #FF0000; color: white; padding: 15px 35px; border-radius: 18px; text-decoration: none; font-weight: 800; display: inline-block; margin-bottom: 25px; box-shadow: 0 10px 20px rgba(255,0,0,0.2); }
+        .sub-link:hover { transform: scale(1.05); }
+        .footer-info { color: #ccc; font-size: 13px; letter-spacing: 1px; }
+
     </style>
 </head>
 <body>
 
-    <nav class="navbar">
-        <a href="/" class="logo">🐾 MeowLyrics</a>
-        <div class="nav-links">
-            <a href="/" class="active">HOME</a>
-            <a href="/account">ACCOUNT</a>
-        </div>
+    <div class="bg-circle"></div>
+
+    <nav>
+        <a href="/" class="logo"><span>🐾</span> MeowLyrics</a>
+        <a href="/login.html" style="text-decoration:none; color:#2D3436; font-weight:800; font-size:14px;">ADMIN</a>
     </nav>
 
     <div class="hero">
-        <div class="badge">MEOW-ZIK TERBAIK</div>
-        <h1>Cari lirik lagu<br><span>kegemaranmu</span> di sini.</h1>
-        
-        <div class="search-wrapper">
-            <input type="text" id="searchInput" class="search-input" placeholder="Tulis tajuk lagu atau nama penyanyi...">
-            <button class="btn-cari" onclick="cariLagu()">Cari</button>
+        <div class="search-box">
+            <input type="text" id="searchInput" class="search-bar" placeholder="Cari lagu kegemaran awak...">
         </div>
     </div>
 
-    <div class="container">
-        <h2 class="section-title">Lirik Popular</h2>
-        
-        <div id="loading">Tunggu kejap, Meow tengah cari lagu...</div>
-        <div class="song-grid" id="listLirik"></div>
+    <div class="content">
+        <div class="section-header" id="listHeader">Koleksi Lirik</div>
+        <div id="lyricsContainer">
+            </div>
     </div>
+
+    <footer>
+        <a href="http://googleusercontent.com/youtube.com/4" class="sub-link">SUBSCRIBE YOUTUBE</a>
+        <div class="footer-info">
+            <p style="color: #2D3436; font-weight: 800; margin-bottom: 5px;">MEOWLYRICS OFFICIAL</p>
+            <p>© 2026 Crafted by BloxyUNick</p>
+        </div>
+    </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -212,47 +92,56 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
+        let songData = [];
 
-        async function muatLagu() {
-            const listDiv = document.getElementById('listLirik');
-            const loading = document.getElementById('loading');
-            
-            try {
-                const querySnapshot = await getDocs(query(collection(db, "songs"), orderBy("createdAt", "desc")));
-                loading.style.display = 'none';
-                listDiv.innerHTML = "";
-
-                querySnapshot.forEach((doc) => {
-                    const lagu = doc.data();
-                    listDiv.innerHTML += `
-                        <a href="/lirik/${doc.id}" class="song-card">
-                            <h3>${lagu.tajuk}</h3>
-                            <p>${lagu.penyanyi}</p>
-                            <div class="btn-view">LIHAT LIRIK ➜</div>
-                        </a>`;
-                });
-            } catch (e) {
-                loading.innerText = "Meow ada masalah: " + e.message;
-            }
+        async function fetchSongs() {
+            const q = query(collection(db, "songs"), orderBy("createdAt", "desc"));
+            const snap = await getDocs(q);
+            songData = snap.docs.map(doc => doc.data());
+            render(songData);
         }
 
-        // Fungsi Search Live
-        document.getElementById('searchInput').addEventListener('input', function(e) {
-            const keyword = e.target.value.toLowerCase();
-            const cards = document.querySelectorAll('.song-card');
-            
-            cards.forEach(card => {
-                const tajuk = card.querySelector('h3').innerText.toLowerCase();
-                const penyanyi = card.querySelector('p').innerText.toLowerCase();
-                if(tajuk.includes(keyword) || penyanyi.includes(keyword)) {
-                    card.style.display = "block";
-                } else {
-                    card.style.display = "none";
+        function render(items) {
+            const container = document.getElementById('lyricsContainer');
+            container.innerHTML = '';
+
+            items.forEach(song => {
+                let videoId = "";
+                if(song.youtubeUrl) {
+                    videoId = song.youtubeUrl.split('v=')[1]?.split('&')[0] || song.youtubeUrl.split('/').pop();
                 }
+
+                container.innerHTML += `
+                    <div class="song-item">
+                        <div class="song-header">
+                            <h2 class="song-title">${song.title}</h2>
+                            <p class="artist-name">${song.artist}</p>
+                        </div>
+                        <div class="lyrics-text">${song.lyrics}</div>
+                        
+                        ${videoId ? `
+                            <div class="yt-label">🔴 OFFICIAL MUSIC VIDEO</div>
+                            <div class="video-box">
+                                <iframe src="http://googleusercontent.com/youtube.com/5${videoId}" allowfullscreen></iframe>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
             });
+        }
+
+        // Search logic
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            const filtered = songData.filter(s => 
+                s.title.toLowerCase().includes(val) || 
+                s.artist.toLowerCase().includes(val)
+            );
+            render(filtered);
+            document.getElementById('listHeader').innerText = val ? `Hasil Carian: ${filtered.length}` : 'Koleksi Lirik';
         });
 
-        muatLagu();
+        fetchSongs();
     </script>
 </body>
 </html>
