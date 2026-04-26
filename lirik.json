@@ -1,53 +1,8 @@
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeowLyrics - Koleksi Lirik</title>
-    <style>
-        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; color: #2f3542; }
-        .container { max-width: 800px; margin: auto; }
-        .song-card { background: white; padding: 15px; border-radius: 10px; margin-bottom: 10px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); text-decoration: none; display: block; border-left: 5px solid #ff4757; }
-        .song-card h3 { margin: 0; color: #ff4757; }
-        .song-card p { margin: 5px 0 0; color: #747d8c; }
-        .search-box { width: 100%; padding: 12px; border-radius: 25px; border: 1px solid #ddd; margin-bottom: 20px; box-sizing: border-box; }
-    </style>
-</head>
-<body>
-<div class="container">
-    <h1>🐾 MeowLyrics</h1>
-    <input type="text" id="searchInput" class="search-box" placeholder="Cari lagu...">
-    <div id="listLirik">Memuatkan lagu...</div>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    const firebaseConfig = {
-        apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
-        authDomain: "meowlyrics-6eacb.firebaseapp.com",
-        projectId: "meowlyrics-6eacb",
-        appId: "1:183440345480:web:4fb71060be2cc24df0923d"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function loadSongs() {
-        const querySnapshot = await getDocs(query(collection(db, "songs"), orderBy("createdAt", "desc")));
-        const listDiv = document.getElementById('listLirik');
-        listDiv.innerHTML = "";
-        querySnapshot.forEach((doc) => {
-            const data = doc.data();
-            listDiv.innerHTML += `
-                <a href="/lirik/${doc.id}" class="song-card">
-                    <h3>${data.tajuk}</h3>
-                    <p>${data.penyanyi}</p>
-                </a>`;
-        });
-    }
-    loadSongs();
-</script>
-</body>
-</html>
+[
+  {
+    "slug": "pindah-ke-firebase",
+    "tajuk": "Sistem Baru Aktif",
+    "penyanyi": "MeowLyrics Admin",
+    "lirik": "Lirik kini diuruskan melalui Admin Panel di /admin.html. Sila tambah lagu di sana!"
+  }
+]
