@@ -1,70 +1,38 @@
-<!DOCTYPE html>
-<html lang="ms">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - MeowLyrics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Poppins', sans-serif; background: #FFFDF2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-box { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 90%; max-width: 400px; }
-        .logo { font-size: 24px; font-weight: 800; color: #FFD32D; margin-bottom: 20px; display: block; text-decoration: none; }
-        .btn-google { background: #4285F4; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 600; font-size: 16px; cursor: pointer; width: 100%; transition: 0.3s; box-shadow: 0 4px 12px rgba(66,133,244,0.3); }
-        .btn-google:active { transform: scale(0.98); }
-    </style>
-</head>
-<body>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-    <div class="login-box">
-        <a href="/" class="logo">🐾 MeowLyrics</a>
-        <p style="margin-bottom: 30px; color: #666;">Sila login untuk urus lirik</p>
-        <button class="btn-google" id="loginBtn">Login dengan Google</button>
-        <div id="errorMsg" style="color: red; margin-top: 15px; font-size: 12px;"></div>
-    </div>
+    const firebaseConfig = {
+        apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
+        authDomain: "meowlyrics-6eacb.firebaseapp.com",
+        projectId: "meowlyrics-6eacb",
+        appId: "1:183440345480:web:4fb71060be2cc24df0923d"
+    };
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const provider = new GoogleAuthProvider();
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
-            authDomain: "meowlyrics-6eacb.firebaseapp.com",
-            projectId: "meowlyrics-6eacb",
-            appId: "1:183440345480:web:4fb71060be2cc24df0923d"
-        };
+    const btn = document.getElementById('loginBtn');
 
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const provider = new GoogleAuthProvider();
-        
-        // PENTING: Untuk elakkan browser sekat pop-up
-        provider.setCustomParameters({ prompt: 'select_account' });
+    btn.onclick = async () => {
+        try {
+            const result = await signInWithPopup(auth, provider);
+            const user = result.user;
 
-        const btn = document.getElementById('loginBtn');
-        const err = document.getElementById('errorMsg');
-
-        btn.onclick = async () => {
-            btn.innerText = "Sila Tunggu...";
-            err.innerText = ""; 
-
-            try {
-                // Gunakan popup
-                const result = await signInWithPopup(auth, provider);
-                console.log("Success:", result.user.email);
-                window.location.href = "admin.html";
-            } catch (error) {
-                btn.innerText = "Login dengan Google";
-                console.error("Ralat Firebase:", error);
-                
-                // Tunjuk ralat kat skrin supaya kita tahu kenapa dia tak jalan
-                err.innerText = "Meow Ralat: " + error.code;
-                
-                // Jika popup kena block, cuba guna Redirect
-                if (error.code === 'auth/popup-blocked' || error.code === 'auth/cancelled-popup-request') {
-                    alert("Pop-up kena sekat! Sila benarkan pop-up di browser awak atau guna Chrome biasa.");
-                }
+            // KESELAMATAN: Semak adakah ini emel tuan punya MeowLyrics?
+            if (user.email === "meowlyrics1@gmail.com") {
+                alert("Selamat datang, Admin MeowLyrics!");
+                window.location.href = "admin.html"; // Lepas masuk ke panel
+            } else {
+                // Jika orang lain, kita logout kan mereka serta-merta
+                await auth.signOut();
+                alert("AKSES DISEKAT! Hanya meowlyrics1@gmail.com sahaja boleh masuk.");
+                window.location.href = "/"; // Tendang balik ke depan
             }
-        };
-    </script>
-</body>
-</html>
+        } catch (error) {
+            console.error("Ralat:", error);
+            alert("Ralat Login: " + error.message);
+        }
+    };
+</script>
