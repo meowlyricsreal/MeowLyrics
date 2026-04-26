@@ -3,167 +3,256 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeowLyrics - Koleksi Lirik Lagu</title>
+    <title>MeowLyrics | Pusat Lirik Meow-zik</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&family=Fredoka+One&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #ff4757;
-            --bg-color: #f4f7f6;
-            --text-color: #2f3542;
+        :root { 
+            --kuning-cair: #FFFDF2; 
+            --kuning-utama: #FFD32D; 
+            --gelap: #2D3436;
+            --putih: #FFFFFF;
         }
+
         body { 
-            font-family: 'Segoe UI', sans-serif; 
-            background-color: var(--bg-color); 
+            font-family: 'Poppins', sans-serif; 
+            background-color: var(--kuning-cair); 
             margin: 0; 
-            padding: 20px; 
-            color: var(--text-color);
+            color: var(--gelap);
+            overflow-x: hidden;
         }
-        header {
-            text-align: center;
-            padding: 30px 0;
+
+        /* --- NAVIGATION --- */
+        .navbar { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 20px 8%; 
+            background: var(--putih);
+            box-shadow: 0 2px 15px rgba(0,0,0,0.03);
         }
-        .container {
-            max-width: 800px;
-            margin: auto;
+
+        .logo { 
+            font-family: 'Fredoka One', cursive;
+            font-size: 28px; 
+            color: var(--kuning-utama); 
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .search-box {
-            width: 100%;
-            padding: 12px;
-            border-radius: 25px;
-            border: 1px solid #ddd;
+
+        .nav-links a {
+            text-decoration: none;
+            color: #b2bec3;
+            font-weight: 600;
+            margin-left: 25px;
+            transition: 0.3s;
+        }
+
+        .nav-links a.active { color: var(--kuning-utama); }
+
+        /* --- HERO SECTION --- */
+        .hero { 
+            text-align: center; 
+            padding: 80px 20px;
+            background-image: radial-gradient(var(--kuning-utama) 0.5px, transparent 0.5px);
+            background-size: 20px 20px; /* Corak bintik halus */
+        }
+
+        .badge {
+            background: var(--kuning-utama);
+            color: var(--gelap);
+            padding: 6px 20px;
+            border-radius: 50px;
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 1px;
             margin-bottom: 20px;
-            box-sizing: border-box;
+            display: inline-block;
         }
-        .song-list {
-            display: grid;
+
+        .hero h1 { 
+            font-size: 50px; 
+            font-weight: 800; 
+            margin: 0; 
+            line-height: 1.1;
+        }
+
+        .hero h1 span { color: var(--kuning-utama); }
+
+        /* --- SEARCH BOX --- */
+        .search-wrapper {
+            position: relative;
+            max-width: 600px;
+            margin: 40px auto;
+        }
+
+        .search-input { 
+            width: 100%; 
+            padding: 22px 30px; 
+            border-radius: 100px; 
+            border: none; 
+            box-shadow: 0 15px 35px rgba(255, 211, 45, 0.2); 
+            font-size: 16px; 
+            font-family: inherit;
+            outline: none;
+        }
+
+        .btn-cari { 
+            position: absolute; 
+            right: 10px; 
+            top: 10px; 
+            bottom: 10px; 
+            background: var(--kuning-utama); 
+            border: none; 
+            padding: 0 35px; 
+            border-radius: 100px; 
+            font-weight: 700; 
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-cari:hover { transform: scale(1.05); }
+
+        /* --- CONTENT SECTION --- */
+        .container { padding: 0 8% 50px; }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
             gap: 15px;
         }
-        .song-card {
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
-            transition: transform 0.2s;
+
+        .section-title::after {
+            content: "";
+            height: 3px;
+            flex-grow: 1;
+            background: #eee;
+        }
+
+        /* --- SONG CARDS --- */
+        .song-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 25px; 
+        }
+
+        .song-card { 
+            background: var(--putih); 
+            padding: 30px; 
+            border-radius: 30px; 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.02);
+            transition: 0.4s;
             text-decoration: none;
-            display: block;
-            border-left: 5px solid var(--primary-color);
+            color: inherit;
+            border: 2px solid transparent;
         }
-        .song-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+
+        .song-card:hover { 
+            transform: translateY(-10px); 
+            border-color: var(--kuning-utama);
+            box-shadow: 0 20px 40px rgba(255, 211, 45, 0.1);
         }
-        .song-card h3 {
-            margin: 0 0 5px 0;
-            color: var(--primary-color);
+
+        .song-card h3 { margin: 0; font-size: 20px; font-weight: 700; color: var(--gelap); }
+        .song-card p { margin: 8px 0 20px; color: #a2a2a2; font-size: 14px; }
+        
+        .btn-view {
+            color: var(--kuning-utama);
+            font-weight: 700;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
-        .song-card p {
-            margin: 0;
-            color: #747d8c;
-            font-size: 14px;
-        }
-        #loading {
-            text-align: center;
-            padding: 20px;
-            color: #a4b0be;
-        }
-        .nav-buttons {
-            text-align: right;
-            margin-bottom: 20px;
-        }
-        .btn-admin {
-            text-decoration: none;
-            font-size: 12px;
-            color: #747d8c;
-            border: 1px solid #ddd;
-            padding: 5px 10px;
-            border-radius: 5px;
-        }
+
+        #loading { text-align: center; padding: 50px; color: #ccc; font-weight: 600; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div class="nav-buttons">
-        <a href="/login.html" class="btn-admin">Akaun / Admin</a>
+    <nav class="navbar">
+        <a href="/" class="logo">🐾 MeowLyrics</a>
+        <div class="nav-links">
+            <a href="/" class="active">HOME</a>
+            <a href="/account">ACCOUNT</a>
+        </div>
+    </nav>
+
+    <div class="hero">
+        <div class="badge">MEOW-ZIK TERBAIK</div>
+        <h1>Cari lirik lagu<br><span>kegemaranmu</span> di sini.</h1>
+        
+        <div class="search-wrapper">
+            <input type="text" id="searchInput" class="search-input" placeholder="Tulis tajuk lagu atau nama penyanyi...">
+            <button class="btn-cari" onclick="cariLagu()">Cari</button>
+        </div>
     </div>
 
-    <header>
-        <h1>🐾 MeowLyrics</h1>
-        <p>Cari lirik lagu kegemaran awak di sini</p>
-    </header>
-
-    <input type="text" class="search-box" placeholder="Cari tajuk lagu atau penyanyi..." id="searchInput">
-
-    <div id="loading">Menarik data dari database...</div>
-    <div class="song-list" id="listLirik">
-        </div>
-</div>
-
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-    // Konfigurasi Firebase awak
-    const firebaseConfig = {
-        apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
-        authDomain: "meowlyrics-6eacb.firebaseapp.com",
-        projectId: "meowlyrics-6eacb",
-        storageBucket: "meowlyrics-6eacb.firebasestorage.app",
-        messagingSenderId: "183440345480",
-        appId: "1:183440345480:web:4fb71060be2cc24df0923d"
-    };
-
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
-
-    async function muatTurunLirik() {
-        const listDiv = document.getElementById('listLirik');
-        const loading = document.getElementById('loading');
+    <div class="container">
+        <h2 class="section-title">Lirik Popular</h2>
         
-        try {
-            // Ambil data dari koleksi "songs" dan susun ikut tarikh terbaru
-            const q = query(collection(db, "songs"), orderBy("createdAt", "desc"));
-            const querySnapshot = await getDocs(q);
+        <div id="loading">Tunggu kejap, Meow tengah cari lagu...</div>
+        <div class="song-grid" id="listLirik"></div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
+            authDomain: "meowlyrics-6eacb.firebaseapp.com",
+            projectId: "meowlyrics-6eacb",
+            appId: "1:183440345480:web:4fb71060be2cc24df0923d"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        async function muatLagu() {
+            const listDiv = document.getElementById('listLirik');
+            const loading = document.getElementById('loading');
             
-            loading.style.display = 'none';
-            listDiv.innerHTML = "";
+            try {
+                const querySnapshot = await getDocs(query(collection(db, "songs"), orderBy("createdAt", "desc")));
+                loading.style.display = 'none';
+                listDiv.innerHTML = "";
 
-            if (querySnapshot.empty) {
-                listDiv.innerHTML = "<p style='text-align:center;'>Belum ada lagu lagi. Boss kena tambah kat Admin Panel!</p>";
-                return;
+                querySnapshot.forEach((doc) => {
+                    const lagu = doc.data();
+                    listDiv.innerHTML += `
+                        <a href="/lirik/${doc.id}" class="song-card">
+                            <h3>${lagu.tajuk}</h3>
+                            <p>${lagu.penyanyi}</p>
+                            <div class="btn-view">LIHAT LIRIK ➜</div>
+                        </a>`;
+                });
+            } catch (e) {
+                loading.innerText = "Meow ada masalah: " + e.message;
             }
+        }
 
-            querySnapshot.forEach((doc) => {
-                const lagu = doc.data();
-                // doc.id adalah slug yang awak masukkan kat Admin Panel
-                listDiv.innerHTML += `
-                    <a href="/lirik/${doc.id}" class="song-card">
-                        <h3>${lagu.tajuk}</h3>
-                        <p>Penyanyi: ${lagu.penyanyi}</p>
-                    </a>
-                `;
+        // Fungsi Search Live
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const keyword = e.target.value.toLowerCase();
+            const cards = document.querySelectorAll('.song-card');
+            
+            cards.forEach(card => {
+                const tajuk = card.querySelector('h3').innerText.toLowerCase();
+                const penyanyi = card.querySelector('p').innerText.toLowerCase();
+                if(tajuk.includes(keyword) || penyanyi.includes(keyword)) {
+                    card.style.display = "block";
+                } else {
+                    card.style.display = "none";
+                }
             });
-        } catch (error) {
-            loading.innerText = "Ralat: " + error.message;
-        }
-    }
+        });
 
-    // Fungsi carian (Search)
-    document.getElementById('searchInput').addEventListener('keyup', function() {
-        let filter = this.value.toUpperCase();
-        let cards = document.getElementsByClassName('song-card');
-        
-        for (let i = 0; i < cards.length; i++) {
-            let title = cards[i].getElementsByTagName('h3')[0];
-            if (title.innerHTML.toUpperCase().indexOf(filter) > -1) {
-                cards[i].style.display = "";
-            } else {
-                cards[i].style.display = "none";
-            }
-        }
-    });
-
-    muatTurunLirik();
-</script>
-
+        muatLagu();
+    </script>
 </body>
 </html>

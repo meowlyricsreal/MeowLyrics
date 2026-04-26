@@ -1,73 +1,70 @@
+/**
+ * 🐾 MEOWLYRICS - SERVER CORE
+ * Diuruskan oleh: Admin MeowLyrics
+ * Platform: Node.js + Express + Firebase
+ */
+
 const express = require('express');
-const fs = require('fs');
 const path = require('path');
+const fs = require('fs');
+
 const app = express();
-const port = 3000;
+const PORT = process.env.PORT || 3000;
 
-// Set enjin paparan
+// ==========================================
+// 1. KONFIGURASI SERVER
+// ==========================================
 app.set('view engine', 'ejs');
-app.use(express.static('public'));
+app.set('views', path.join(__dirname, 'views'));
 
-// Fungsi untuk ambil data lagu
-function getLaguData() {
-    const data = fs.readFileSync('./lirik.json', 'utf-8');
-    return JSON.parse(data);
-}
+// Benarkan akses fail statik di folder utama dan public
+app.use(express.static(__dirname));
+app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-// --- 1. HALAMAN UTAMA & CARIAN ---
+// ==========================================
+// 2. SISTEM ROUTING (NAVIGASI)
+// ==========================================
+
+// --- [ Halaman Utama ] ---
 app.get('/', (req, res) => {
-    try {
-        let lagu = getLaguData();
-        const q = req.query.q || '';
-        
-        if (q) {
-            lagu = lagu.filter(l => 
-                l.tajuk.toLowerCase().includes(q.toLowerCase()) || 
-                l.penyanyi.toLowerCase().includes(q.toLowerCase())
-            );
-        }
-        res.render('index', { lagu, carian: q });
-    } catch (err) {
-        console.log("Ralat: Pastikan fail lirik.json wujud!");
-        res.send("Sila pastikan fail lirik.json anda betul.");
-    }
+    console.log("🐾 Seseorang melawat Home");
+    res.render('index');
 });
 
-// --- 2. HALAMAN LIRIK ---
-app.get('/lagu/:slug', (req, res) => {
-    try {
-        const slug = req.params.slug;
-        const semuaLagu = getLaguData();
-        const infoLagu = semuaLagu.find(l => l.slug === slug);
-        
-        if (!infoLagu) {
-            return res.status(404).send("Lagu tidak ada dalam senarai!");
-        }
-
-        // Cari fail .txt dalam folder songs
-        const lirikPath = path.join(__dirname, 'songs', `${slug}.txt`);
-        
-        let isiLirik = "Lirik belum tersedia 😿";
-        if (fs.existsSync(lirikPath)) {
-            isiLirik = fs.readFileSync(lirikPath, 'utf-8');
-        }
-
-        // KATA KUNCI: Dia akan cari fail 'views/lirik.ejs'
-        res.render('lirik', { lagu: infoLagu, lirik: isiLirik });
-        
-    } catch (err) {
-        console.log(err);
-        res.send("Ada masalah teknikal berlaku.");
-    }
+// --- [ Halaman Lirik ] ---
+// Mengambil 'id' (slug) lagu untuk dipaparkan di lirik.ejs
+app.get('/lirik/:id', (req, res) => {
+    const songId = req.params.id;
+    console.log(`🎵 Membuka lirik: ${songId}`);
+    res.render('lirik', { id: songId });
 });
 
-// --- 3. HALAMAN ACCOUNT ---
+// --- [ Halaman Akaun & Login ] ---
 app.get('/account', (req, res) => {
-    res.render('account');
+    res.sendFile(path.join(__dirname, 'login.html'));
 });
 
-// Jalankan Server
-app.listen(port, () => {
-    console.log(`🐾 MEOW LYRICS BERJALAN!`);
-    console.log(`Buka Chrome di: http://localhost:${port}`);
+// --- [ Halaman Admin Panel ] ---
+app.get('/admin', (req, res) => {
+    res.sendFile(path.join(__dirname, 'admin.html'));
+});
+
+// ==========================================
+// 3. PENGURUSAN RALAT (ERROR 404)
+// ==========================================
+// Jika user taip URL yang salah, hantar ke 404
+app.use((req, res) => {
+    res.status(404).send('<center><h1>🐾 404 - Alamat Tak Jumpa Meow!</h1><a href="/">Balik ke Home</a></center>');
+});
+
+// ==========================================
+// 4. PELANCARAN SERVER
+// ==========================================
+app.listen(PORT, () => {
+    console.log('==========================================');
+    console.log(`🚀 MEOWLYRICS SERVER AKTIF!`);
+    console.log(`📍 URL: http://localhost:${PORT}`);
+    console.log('==========================================');
 });
