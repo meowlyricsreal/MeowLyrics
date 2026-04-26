@@ -3,22 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SignUp - MeowLyrics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Login - MeowLyrics</title>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #FFFDF2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
-        .login-card { background: white; padding: 40px; border-radius: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); text-align: center; width: 90%; max-width: 400px; }
-        .btn-google { background: #2D3436; color: white; border: none; padding: 18px; border-radius: 20px; font-weight: 800; cursor: pointer; width: 100%; font-size: 16px; transition: 0.3s; }
-        .btn-google:hover { transform: translateY(-3px); background: #000; }
+        body { font-family: sans-serif; background: #FFFDF2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .card { background: white; padding: 40px; border-radius: 30px; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.05); width: 350px; }
+        .btn { background: #2D3436; color: white; border: none; padding: 15px; width: 100%; border-radius: 15px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="login-card">
-        <h2 style="font-weight: 800;">🐾 MeowLyrics</h2>
-        <p style="color: #888; margin-bottom: 30px;">Sila SignUp dengan emel rasmi</p>
-        <button class="btn-google" id="loginBtn">Terus ke Google Login</button>
-        <p id="status" style="margin-top: 15px; font-size: 12px; color: red;"></p>
+    <div class="card">
+        <h2>🐾 MeowLyrics</h2>
+        <p>Hanya MeowLyrics Official sahaja boleh masuk.</p>
+        <button id="loginBtn" class="btn">Login dengan Google</button>
+        <p id="msg" style="color: red; font-size: 12px; margin-top: 10px;"></p>
     </div>
 
     <script type="module">
@@ -35,24 +32,20 @@
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const provider = new GoogleAuthProvider();
-        
-        // Ini fungsi untuk paksa Google tanya "Pilih Akaun Mana"
         provider.setCustomParameters({ prompt: 'select_account' });
 
         document.getElementById('loginBtn').onclick = async () => {
-            document.getElementById('status').innerText = "Menghubungkan ke Google...";
             try {
                 const result = await signInWithPopup(auth, provider);
                 if (result.user.email === "meowlyrics1@gmail.com") {
                     window.location.href = "admin.html";
                 } else {
-                    alert("Akses Ditolak! Hanya MeowLyrics Official sahaja.");
+                    alert("Akses Ditolak!");
                     await auth.signOut();
                     window.location.href = "/";
                 }
-            } catch (error) {
-                document.getElementById('status').innerText = "Meow Ralat: " + error.code;
-                console.error(error);
+            } catch (e) {
+                document.getElementById('msg').innerText = "Ralat: " + e.code;
             }
         };
     </script>

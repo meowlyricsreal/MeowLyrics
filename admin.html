@@ -3,61 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel - MeowLyrics</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>Admin - MeowLyrics</title>
     <style>
-        :root { --main: #FFD32D; --bg: #FFFDF2; --dark: #2D3436; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; padding: 20px; display: none; /* Sorok selagi belum verify admin */ }
-        
-        .admin-container { max-width: 600px; margin: 40px auto; background: white; padding: 40px; border-radius: 40px; box-shadow: 0 20px 40px rgba(0,0,0,0.05); }
-        h1 { font-weight: 800; font-size: 24px; margin-bottom: 30px; text-align: center; }
-        
-        .form-group { margin-bottom: 20px; }
-        label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 14px; }
-        input, textarea { width: 100%; padding: 15px; border-radius: 15px; border: 2px solid #F1F2F6; font-family: inherit; font-size: 14px; outline: none; }
-        input:focus, textarea:focus { border-color: var(--main); }
-        
-        textarea { height: 150px; resize: vertical; }
-        
-        .btn-save { width: 100%; background: var(--main); color: var(--dark); border: none; padding: 18px; border-radius: 15px; font-weight: 800; font-size: 16px; cursor: pointer; margin-top: 10px; }
-        .btn-save:active { transform: scale(0.98); }
-        
-        .logout-link { display: block; text-align: center; margin-top: 20px; color: #A4B0BE; text-decoration: none; font-weight: 600; font-size: 13px; }
+        body { font-family: sans-serif; background: #FFFDF2; padding: 20px; display: none; }
+        .box { max-width: 500px; margin: 0 auto; background: white; padding: 30px; border-radius: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        input, textarea { width: 100%; padding: 12px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #ddd; }
+        .save-btn { width: 100%; padding: 15px; background: #FFD32D; border: none; font-weight: bold; border-radius: 10px; cursor: pointer; }
     </style>
 </head>
 <body>
-
-    <div class="admin-container">
-        <h1>🐾 Admin MeowLyrics</h1>
-        
-        <div class="form-group">
-            <label>Tajuk Lagu</label>
-            <input type="text" id="songTitle" placeholder="Contoh: Tak Ingin Usai">
-        </div>
-
-        <div class="form-group">
-            <label>Artis</label>
-            <input type="text" id="songArtist" placeholder="Contoh: Keisya Levronka">
-        </div>
-
-        <div class="form-group">
-            <label>Lirik Lagu</label>
-            <textarea id="songLyrics" placeholder="Masukkan lirik di sini..."></textarea>
-        </div>
-
-        <div class="form-group">
-            <label>URL Video YouTube</label>
-            <input type="text" id="songYoutube" placeholder="Contoh: https://www.youtube.com/watch?v=xxxx">
-        </div>
-
-        <button class="btn-save" id="saveBtn">Simpan Lirik</button>
-        
-        <a href="#" id="logoutBtn" class="logout-link">Log Keluar Admin</a>
+    <div class="box">
+        <h3>🐾 Tambah Lirik Baru</h3>
+        <input type="text" id="t" placeholder="Tajuk Lagu">
+        <input type="text" id="a" placeholder="Artis">
+        <textarea id="l" placeholder="Lirik lagu..."></textarea>
+        <input type="text" id="y" placeholder="Link YouTube (Contoh: https://youtube.com/...)">
+        <button id="s" class="save-btn">Simpan Sekarang</button>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
         import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
@@ -71,54 +37,30 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // --- SISTEM BODYGUARD ---
+        // KAWALAN AKSES: Cek emel admin
         onAuthStateChanged(auth, (user) => {
             if (user && user.email === "meowlyrics1@gmail.com") {
-                document.body.style.display = "block"; // Tunjukkan page kalau emel betul
+                document.body.style.display = "block";
             } else {
-                alert("Akses Disekat! Anda bukan Admin.");
-                window.location.href = "login.html"; // Tendang keluar kalau emel salah
+                window.location.href = "login.html";
             }
         });
 
-        // --- FUNGSI SIMPAN LAGU ---
-        const saveBtn = document.getElementById('saveBtn');
-        saveBtn.onclick = async () => {
-            const title = document.getElementById('songTitle').value;
-            const artist = document.getElementById('songArtist').value;
-            const lyrics = document.getElementById('songLyrics').value;
-            const youtubeUrl = document.getElementById('songYoutube').value;
+        document.getElementById('s').onclick = async () => {
+            const title = document.getElementById('t').value;
+            const artist = document.getElementById('a').value;
+            const lyrics = document.getElementById('l').value;
+            const youtube = document.getElementById('y').value;
 
-            if (!title || !artist || !lyrics) {
-                alert("Sila isi semua maklumat utama!");
-                return;
-            }
-
-            saveBtn.innerText = "Menyimpan...";
-            saveBtn.disabled = true;
+            if(!title || !artist || !lyrics) return alert("Isi semua!");
 
             try {
                 await addDoc(collection(db, "songs"), {
-                    title: title,
-                    artist: artist,
-                    lyrics: lyrics,
-                    youtubeUrl: youtubeUrl,
-                    createdAt: serverTimestamp()
+                    title, artist, lyrics, youtubeUrl: youtube, createdAt: serverTimestamp()
                 });
-                alert("Lirik berjaya disimpan! 🐾");
-                location.reload(); // Refresh untuk kosongkan borang
-            } catch (e) {
-                alert("Gagal simpan: " + e.message);
-                saveBtn.innerText = "Simpan Lirik";
-                saveBtn.disabled = false;
-            }
-        };
-
-        // --- FUNGSI LOGOUT ---
-        document.getElementById('logoutBtn').onclick = () => {
-            signOut(auth).then(() => {
-                window.location.href = "index.html";
-            });
+                alert("Berjaya!");
+                location.reload();
+            } catch(e) { alert("Ralat!"); }
         };
     </script>
 </body>
