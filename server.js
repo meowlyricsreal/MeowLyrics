@@ -1,12 +1,11 @@
 /**
- * 🐾 MEOWLYRICS - SERVER CORE
+ * 🐾 MEOWLYRICS - SERVER CORE (FIXED)
  * Diuruskan oleh: Admin MeowLyrics
- * Platform: Node.js + Express + Firebase
+ * Platform: Node.js + Express
  */
 
 const express = require('express');
 const path = require('path');
-const fs = require('fs');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -17,8 +16,8 @@ const PORT = process.env.PORT || 3000;
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// Benarkan akses fail statik di folder utama dan public
-app.use(express.static(__dirname));
+// PENTING: Susunan fail statik
+app.use(express.static(path.join(__dirname))); 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -29,20 +28,18 @@ app.use(express.urlencoded({ extended: true }));
 
 // --- [ Halaman Utama ] ---
 app.get('/', (req, res) => {
-    console.log("🐾 Seseorang melawat Home");
     res.render('index');
 });
 
-// --- [ Halaman Lirik ] ---
-// Mengambil 'id' (slug) lagu untuk dipaparkan di lirik.ejs
+// --- [ Halaman Lirik (Jika Guna) ] ---
 app.get('/lirik/:id', (req, res) => {
-    const songId = req.params.id;
-    console.log(`🎵 Membuka lirik: ${songId}`);
-    res.render('lirik', { id: songId });
+    res.render('lirik', { id: req.params.id });
 });
 
-// --- [ Halaman Akaun & Login ] ---
-app.get('/account', (req, res) => {
+// --- [ Halaman Akaun & Login (FIX 404) ] ---
+// Kita buat dua-dua alamat /login dan /account pergi ke fail yang sama
+app.get(['/login', '/account'], (req, res) => {
+    console.log("🐾 Menghantar ke halaman Login...");
     res.sendFile(path.join(__dirname, 'login.html'));
 });
 
@@ -54,9 +51,15 @@ app.get('/admin', (req, res) => {
 // ==========================================
 // 3. PENGURUSAN RALAT (ERROR 404)
 // ==========================================
-// Jika user taip URL yang salah, hantar ke 404
 app.use((req, res) => {
-    res.status(404).send('<center><h1>🐾 404 - Alamat Tak Jumpa Meow!</h1><a href="/">Balik ke Home</a></center>');
+    res.status(404).send(`
+        <center style="margin-top:50px; font-family:sans-serif;">
+            <h1 style="font-size:50px;">🐾</h1>
+            <h1>404 - Alamat Tak Jumpa!</h1>
+            <p>Meow! Nampaknya alamat yang awak taip tu salah.</p>
+            <a href="/" style="background:#FFD32D; color:#000; padding:10px 20px; border-radius:10px; text-decoration:none; font-weight:bold;">Balik ke Home</a>
+        </center>
+    `);
 });
 
 // ==========================================
@@ -65,6 +68,6 @@ app.use((req, res) => {
 app.listen(PORT, () => {
     console.log('==========================================');
     console.log(`🚀 MEOWLYRICS SERVER AKTIF!`);
-    console.log(`📍 URL: http://localhost:${PORT}`);
+    console.log(`📍 PORT: ${PORT}`);
     console.log('==========================================');
 });
