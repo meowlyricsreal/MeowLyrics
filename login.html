@@ -3,123 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login & Profil - MeowLyrics</title>
+    <title>Login - MeowLyrics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: #f0f2f5; margin: 0; }
-        .card { background: white; padding: 30px; border-radius: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.1); text-align: center; width: 90%; max-width: 400px; }
-        button { background: #4285F4; color: white; border: none; padding: 12px 20px; border-radius: 8px; cursor: pointer; font-size: 16px; width: 100%; transition: 0.3s; }
-        button:hover { background: #357ae8; }
-        input { width: 100%; padding: 12px; margin: 15px 0; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
-        .profile-img { width: 80px; height: 80px; border-radius: 50%; margin-bottom: 15px; border: 3px solid #4285F4; }
-        #loading { display: none; color: #666; }
+        body { font-family: 'Poppins', sans-serif; background: #FFFDF2; display: flex; justify-content: center; align-items: center; height: 100vh; margin: 0; }
+        .login-box { background: white; padding: 40px; border-radius: 30px; box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center; width: 90%; max-width: 400px; }
+        h2 { font-size: 28px; font-weight: 800; margin-bottom: 10px; }
+        p { color: #888; margin-bottom: 30px; }
+        .btn-google { background: #4285F4; color: white; border: none; padding: 15px 30px; border-radius: 12px; font-weight: 600; font-size: 16px; cursor: pointer; width: 100%; transition: 0.3s; }
+        .btn-google:hover { background: #357ae8; transform: translateY(-2px); }
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2 id="title">MeowLyrics</h2>
-    
-    <div id="loggedOut">
+    <div class="login-box">
+        <h2>MeowLyrics</h2>
         <p>Sila masuk untuk akses penuh</p>
-        <button id="btnGoogle">Login dengan Google</button>
+        <button class="btn-google" id="loginBtn">Login dengan Google</button>
     </div>
 
-    <div id="loggedIn" style="display: none;">
-        <img id="userPic" class="profile-img" src="">
-        <h3 id="userDisplayName">Hai!</h3>
-        <p id="userEmail" style="color: #666; font-size: 14px;"></p>
-        
-        <hr>
-        
-        <p><strong>Lengkapkan Info:</strong></p>
-        <input type="tel" id="phoneInput" placeholder="Masukkan No. Telefon (6012...)">
-        <button id="btnSave" style="background: #28a745;">Simpan No. Telefon</button>
-        <p id="statusMsg" style="font-size: 12px; margin-top: 10px;"></p>
-        
-        <button onclick="logout()" style="background: #dc3545; margin-top: 20px; font-size: 14px;">Log Keluar</button>
-    </div>
-    
-    <div id="loading">Memuatkan...</div>
-</div>
+    <script type="module">
+        // 1. Import Firebase
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
 
-<script type="module">
-  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-  import { getAuth, signInWithPopup, GoogleAuthProvider, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-  import { getFirestore, doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        // 2. Config Firebase Awak
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
+            authDomain: "meowlyrics-6eacb.firebaseapp.com",
+            projectId: "meowlyrics-6eacb",
+            appId: "1:183440345480:web:4fb71060be2cc24df0923d"
+        };
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
-    authDomain: "meowlyrics-6eacb.firebaseapp.com",
-    projectId: "meowlyrics-6eacb",
-    storageBucket: "meowlyrics-6eacb.firebasestorage.app",
-    messagingSenderId: "183440345480",
-    appId: "1:183440345480:web:4fb71060be2cc24df0923d"
-  };
+        // 3. Start Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const provider = new GoogleAuthProvider();
 
-  const app = initializeApp(firebaseConfig);
-  const auth = getAuth(app);
-  const db = getFirestore(app);
-  const provider = new GoogleAuthProvider();
-
-  // 1. Logik Login
-  document.getElementById('btnGoogle').onclick = async () => {
-      try {
-          await signInWithPopup(auth, provider);
-      } catch (error) {
-          alert("Gagal Login: " + error.message);
-      }
-  };
-
-  // 2. Pantau Perubahan Status User
-  onAuthStateChanged(auth, async (user) => {
-      const loggedOutDiv = document.getElementById('loggedOut');
-      const loggedInDiv = document.getElementById('loggedIn');
-      
-      if (user) {
-          loggedOutDiv.style.display = 'none';
-          loggedInDiv.style.display = 'block';
-          document.getElementById('userPic').src = user.photoURL;
-          document.getElementById('userDisplayName').innerText = "Hai, " + user.displayName;
-          document.getElementById('userEmail').innerText = user.email;
-
-          // Cuba tarik no tel lama dari database kalau ada
-          const docRef = doc(db, "users", user.uid);
-          const docSnap = await getDoc(docRef);
-          if (docSnap.exists()) {
-              document.getElementById('phoneInput').value = docSnap.data().phone || "";
-          }
-      } else {
-          loggedOutDiv.style.display = 'block';
-          loggedInDiv.style.display = 'none';
-      }
-  });
-
-  // 3. Simpan No Telefon ke Firestore
-  document.getElementById('btnSave').onclick = async () => {
-      const user = auth.currentUser;
-      const phone = document.getElementById('phoneInput').value;
-      const status = document.getElementById('statusMsg');
-
-      if (!phone) return alert("Sila masukkan nombor!");
-
-      try {
-          status.innerText = "Sedang menyimpan...";
-          await setDoc(doc(db, "users", user.uid), {
-              name: user.displayName,
-              email: user.email,
-              phone: phone,
-              lastUpdate: new Date()
-          }, { merge: true });
-          status.innerText = "✅ Berjaya disimpan!";
-          status.style.color = "green";
-      } catch (e) {
-          status.innerText = "❌ Ralat: " + e.message;
-          status.style.color = "red";
-      }
-  };
-
-  window.logout = () => signOut(auth);
-</script>
-
+        // 4. Fungsi Butang Login
+        document.getElementById('loginBtn').onclick = async () => {
+            try {
+                const result = await signInWithPopup(auth, provider);
+                console.log("Berjaya login:", result.user.email);
+                // Lepas berjaya, hantar terus ke halaman Admin
+                window.location.href = "admin.html";
+            } catch (error) {
+                console.error("Ralat login:", error.message);
+                alert("Gagal login: " + error.message);
+            }
+        };
+    </script>
 </body>
 </html>
