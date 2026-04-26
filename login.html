@@ -3,104 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeowLyrics | Join the Community</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>MeowLyrics | Masuk</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #FFD32D; --dark: #1a1a1a; --glass: rgba(255, 255, 255, 0.8); }
-        
-        * { box-sizing: border-box; transition: 0.3s; }
-        
+        :root { --soft-yellow: #FFF9E3; --deep-yellow: #FFD32D; --text: #444; }
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            margin: 0; 
-            height: 100vh; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            background: #f0f2f5;
-            background: linear-gradient(135deg, #FFD32D 0%, #ff9f43 100%);
+            background-color: var(--soft-yellow); 
+            margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh;
         }
-
-        .auth-container {
-            background: var(--glass);
-            backdrop-filter: blur(15px);
-            padding: 40px;
-            border-radius: 40px;
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.1);
-            text-align: center;
-            border: 1px solid rgba(255,255,255,0.3);
+        .login-box {
+            background: white; padding: 40px; border-radius: 30px; width: 85%; max-width: 350px;
+            box-shadow: 0 15px 35px rgba(255, 211, 45, 0.2); text-align: center;
         }
-
-        .logo-area { font-size: 40px; margin-bottom: 10px; }
-        h2 { font-weight: 800; margin-bottom: 5px; color: var(--dark); }
-        p { font-size: 14px; color: #666; margin-bottom: 30px; }
-
-        .input-group { position: relative; margin-bottom: 15px; }
-        input { 
-            width: 100%; 
-            padding: 18px 25px; 
-            border-radius: 20px; 
-            border: 2px solid transparent; 
-            background: white; 
-            font-weight: 600; 
-            font-family: inherit;
-            outline: none;
-        }
-        input:focus { border-color: var(--main); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-
-        .btn { 
-            width: 100%; 
-            padding: 18px; 
-            border-radius: 20px; 
-            border: none; 
-            font-weight: 800; 
-            font-size: 16px; 
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .btn-primary { background: var(--dark); color: white; box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .btn-primary:hover { transform: translateY(-3px); background: #333; }
+        .logo-text { font-weight: 800; font-size: 24px; color: var(--text); margin-bottom: 20px; }
+        .logo-text span { background: var(--deep-yellow); padding: 4px 10px; border-radius: 10px; }
         
-        .toggle-link { 
-            margin-top: 20px; 
-            display: block; 
-            font-size: 13px; 
-            font-weight: 700; 
-            color: var(--dark); 
-            text-decoration: none;
-            cursor: pointer;
+        input { 
+            width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; 
+            border: 2px solid #F1F1F1; outline: none; box-sizing: border-box; font-weight: 600;
         }
-
-        .error-msg { 
-            background: #ff4757; color: white; 
-            padding: 10px; border-radius: 12px; 
-            font-size: 12px; font-weight: 700; 
-            margin-bottom: 15px; display: none; 
+        input:focus { border-color: var(--deep-yellow); }
+        
+        .btn-masuk { 
+            width: 100%; padding: 15px; border-radius: 15px; border: none; 
+            background: var(--deep-yellow); color: #333; font-weight: 800; cursor: pointer;
         }
+        .switch-text { font-size: 13px; margin-top: 20px; color: #888; cursor: pointer; font-weight: 700; }
+        .error-msg { color: #ff4757; font-size: 12px; margin-bottom: 10px; display: none; font-weight: 700; }
     </style>
 </head>
 <body>
 
-    <div class="auth-container">
-        <div class="logo-area">🐾</div>
-        <h2 id="title">Log Masuk</h2>
-        <p id="sub-title">Sertai komuniti MeowLyrics</p>
-
+    <div class="login-box">
+        <div class="logo-text"><span>Meow</span>Lyrics</div>
+        <p style="font-size: 14px; color: #777;" id="desc">Sila masukkan nama akaun unik awak</p>
+        
         <div id="error-box" class="error-msg"></div>
 
-        <div class="input-group">
-            <input type="text" id="username" placeholder="Nama Akaun (Username)">
-        </div>
-        <div class="input-group">
-            <input type="password" id="password" placeholder="Kata Laluan">
-        </div>
+        <input type="text" id="username" placeholder="Nama Akaun (Contoh: bloxy)">
+        <input type="password" id="password" placeholder="Kata Laluan">
 
-        <button class="btn btn-primary" id="main-btn">Masuk</button>
-        <div class="toggle-link" id="switch-mode">Belum ada akaun? Daftar sekarang</div>
+        <button class="btn-masuk" id="actionBtn">Masuk Sekarang</button>
+        <div class="switch-text" id="toggleBtn">Belum ada akaun? Daftar di sini</div>
         
-        <a href="/" style="display:block; margin-top:20px; font-size:12px; color:#666; text-decoration:none;">← Kembali ke Home</a>
+        <a href="/" style="display:block; margin-top:15px; text-decoration:none; font-size:12px; color: #aaa;">Kembali ke Utama</a>
     </div>
 
     <script type="module">
@@ -120,65 +67,46 @@
         const db = getFirestore(app);
 
         let isLogin = true;
-
-        const switchBtn = document.getElementById('switch-mode');
-        const mainBtn = document.getElementById('main-btn');
+        const actionBtn = document.getElementById('actionBtn');
+        const toggleBtn = document.getElementById('toggleBtn');
         const errorBox = document.getElementById('error-box');
 
-        // Tukar mode Login/Register
-        switchBtn.onclick = () => {
+        toggleBtn.onclick = () => {
             isLogin = !isLogin;
-            document.getElementById('title').innerText = isLogin ? "Log Masuk" : "Daftar Akaun";
-            mainBtn.innerText = isLogin ? "Masuk" : "Daftar";
-            switchBtn.innerText = isLogin ? "Belum ada akaun? Daftar sekarang" : "Dah ada akaun? Log masuk";
+            document.getElementById('desc').innerText = isLogin ? "Sila masukkan nama akaun unik awak" : "Cipta akaun baru awak sekarang";
+            actionBtn.innerText = isLogin ? "Masuk Sekarang" : "Daftar Akaun";
+            toggleBtn.innerText = isLogin ? "Belum ada akaun? Daftar di sini" : "Dah ada akaun? Log masuk";
         };
 
-        mainBtn.onclick = async () => {
+        actionBtn.onclick = async () => {
             const user = document.getElementById('username').value.trim().toLowerCase();
             const pass = document.getElementById('password').value;
-            const fakeEmail = `${user}@meow.com`; // Trik untuk Firebase Auth
+            const fakeEmail = `${user}@meowlyrics.com`; // Trik fix unauthorized domain
 
-            if(!user || !pass) return showErr("Sila isi semua ruangan!");
-            errorBox.style.display = "none";
+            if(!user || pass.length < 6) {
+                errorBox.innerText = "Isi semua & Password min 6 aksara!";
+                errorBox.style.display = "block";
+                return;
+            }
 
-            if(isLogin) {
-                // PROSES LOGIN
-                try {
+            try {
+                if(isLogin) {
                     await signInWithEmailAndPassword(auth, fakeEmail, pass);
-                    window.location.href = "/";
-                } catch (e) {
-                    showErr("Username atau Kata Laluan salah!");
-                }
-            } else {
-                // PROSES DAFTAR
-                try {
-                    // 1. Cek dulu username dah ada belum kat Firestore
+                } else {
                     const userRef = doc(db, "usernames", user);
-                    const userSnap = await getDoc(userRef);
+                    const snap = await getDoc(userRef);
+                    if(snap.exists()) throw new Error("Nama akaun sudah diambil!");
                     
-                    if (userSnap.exists()) {
-                        return showErr("Nama akaun sudah digunakan!");
-                    }
-
-                    // 2. Register di Auth
                     const res = await createUserWithEmailAndPassword(auth, fakeEmail, pass);
-                    
-                    // 3. Simpan username & Set Display Name
-                    await setDoc(doc(db, "usernames", user), { uid: res.user.uid });
+                    await setDoc(userRef, { uid: res.user.uid });
                     await updateProfile(res.user, { displayName: user });
-                    
-                    alert("Akaun berjaya dicipta! Meow! 🐾");
-                    window.location.href = "/";
-                } catch (e) {
-                    showErr("Gagal daftar: Pastikan password 6 aksara ke atas.");
                 }
+                window.location.href = "/";
+            } catch (e) {
+                errorBox.innerText = e.message;
+                errorBox.style.display = "block";
             }
         };
-
-        function showErr(msg) {
-            errorBox.innerText = msg;
-            errorBox.style.display = "block";
-        }
     </script>
 </body>
 </html>
