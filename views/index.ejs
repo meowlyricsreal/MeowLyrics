@@ -8,7 +8,7 @@
     <style>
         :root {
             --primary: #FFD32D;
-            --soft-bg: #FFF9E3; /* Kuning Cair */
+            --soft-bg: #FFF9E3; 
             --white: #FFFFFF;
             --dark: #2D3436;
         }
@@ -17,7 +17,6 @@
         
         body { background-color: var(--soft-bg); margin: 0; color: var(--dark); padding-bottom: 100px; overflow-x: hidden; }
 
-        /* --- FIX LOADING STUCK --- */
         #loader {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: var(--dark); z-index: 9999; display: flex; flex-direction: column;
@@ -27,7 +26,6 @@
         .spinner { width: 40px; height: 40px; border: 4px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 1s infinite linear; }
         @keyframes spin { to { transform: rotate(360deg); } }
 
-        /* --- HEADER & SEARCH --- */
         header { padding: 30px 20px; display: flex; justify-content: space-between; align-items: center; }
         .logo { font-weight: 800; font-size: 22px; text-decoration: none; color: var(--dark); }
         .logo span { background: var(--primary); padding: 5px 10px; border-radius: 12px; }
@@ -38,7 +36,6 @@
             box-shadow: 0 10px 30px rgba(255, 211, 45, 0.2); font-weight: 600; outline: none;
         }
 
-        /* --- CARDS & ANIMATION --- */
         .container { padding: 0 20px; }
         .card { 
             background: var(--white); border-radius: 25px; padding: 25px; margin-bottom: 20px; 
@@ -58,7 +55,6 @@
             background: #fafafa; font-weight: 800; cursor: pointer; color: #888;
         }
 
-        /* --- LIKE & COMMENT --- */
         .action-bar { display: flex; gap: 15px; margin-top: 15px; }
         .action-btn { background: none; border: none; font-weight: 800; font-size: 13px; cursor: pointer; color: #666; display: flex; align-items: center; gap: 5px; }
         
@@ -66,7 +62,6 @@
         .comment-sec.show { display: block; }
         .comment-list { max-height: 150px; overflow-y: auto; font-size: 12px; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; }
 
-        /* --- BOTTOM NAV --- */
         .nav-bar { 
             position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); 
             width: 85%; max-width: 400px; background: var(--dark); padding: 12px; 
@@ -92,8 +87,7 @@
         <input type="text" id="searchInput" placeholder="Cari tajuk lagu atau artis...">
     </div>
 
-    <div class="container" id="song-list">
-        </div>
+    <div class="container" id="song-list"></div>
 
     <div class="nav-bar">
         <a href="/" class="nav-item active">HOME</a>
@@ -135,19 +129,33 @@
                 ui.innerHTML = `<span onclick="logout()" style="cursor:pointer; color:#ff4757;">Keluar</span>`;
                 acc.innerText = user.displayName?.toUpperCase() || "PROFIL";
                 if (user.email === "meowlyrics1@gmail.com") adm.style.display = "block";
+            } else {
+                ui.innerHTML = `<a href="/login" style="text-decoration:none; color:inherit;">Login</a>`;
             }
         });
 
         window.logout = () => { if(confirm("Logout?")) signOut(auth).then(()=>location.reload()); };
 
-        // 3. Load & Search Songs
+        // 3. PENGURUSAN DATA & SEARCH (FIXED)
+        let allSongs = []; // Simpan semua data di sini
+
         const q = query(collection(db, "songs"), orderBy("createdAt", "desc"));
         onSnapshot(q, (snap) => {
+            allSongs = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            renderSongs(allSongs);
+        });
+
+        function renderSongs(songs) {
             const list = document.getElementById('song-list');
             list.innerHTML = '';
-            snap.forEach(docSnap => {
-                const s = docSnap.data();
-                const id = docSnap.id;
+            
+            if(songs.length === 0) {
+                list.innerHTML = '<center style="opacity:0.5; padding:50px;">Meow! Lagu tak dijumpai...</center>';
+                return;
+            }
+
+            songs.forEach(s => {
+                const id = s.id;
                 const card = document.createElement('div');
                 card.className = 'card';
                 card.innerHTML = `
@@ -172,8 +180,19 @@
                 list.appendChild(card);
                 loadComments(id);
             });
+        }
+
+        // Logik Search Real-time
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            const val = e.target.value.toLowerCase();
+            const filtered = allSongs.filter(s => 
+                s.title.toLowerCase().includes(val) || 
+                s.artist.toLowerCase().includes(val)
+            );
+            renderSongs(filtered);
         });
 
+        // --- Fungsi Lain-lain ---
         window.toggleLirik = (btn) => {
             const box = btn.nextElementSibling;
             box.classList.toggle('open');
@@ -182,7 +201,6 @@
 
         window.toggleCom = (id) => document.getElementById(`com-sec-${id}`).classList.toggle('show');
 
-        // --- Fitur Interaksi ---
         window.likeSong = async (id) => {
             if(!currentUser) return alert("Sila login untuk Like!");
             await updateDoc(doc(db, "songs", id), { likes: increment(1) });
@@ -201,7 +219,7 @@
         window.loadComments = (id) => {
             onSnapshot(query(collection(db, "songs", id, "comments"), orderBy("time", "desc")), (s) => {
                 const list = document.getElementById(`list-${id}`);
-                list.innerHTML = s.docs.map(d => `<div><b>@${d.data().name}</b>: ${d.data().text}</div>`).join('') || 'Tiada komen.';
+                list.innerHTML = s.docs.map(d => `<div><b>@${d.data().name}</b>: ${d.data().text}</div>`).join('') || '<span style="opacity:0.5">Tiada komen.</span>';
             });
         };
     </script>
