@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title><%= lagu.tajuk %> | Meow Lyrics</title>
+    <style>body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FFFDF0; }</style>
+</head>
+<body class="min-h-screen p-6">
+    <div class="max-w-xl mx-auto">
+        <a href="/" class="inline-flex items-center gap-2 text-yellow-600 font-bold mb-8 hover:gap-4 transition-all">
+            <span>←</span> Kembali ke Home
+        </a>
+
+        <div class="bg-white p-8 md:p-12 rounded-[50px] shadow-2xl border border-yellow-50 relative overflow-hidden">
+            <div class="absolute top-5 right-5 text-4xl opacity-10 rotate-12">🐾</div>
+            
+            <header class="mb-10">
+                <span class="bg-yellow-100 text-yellow-700 px-4 py-1 rounded-full text-xs font-black uppercase tracking-widest">Lirik Lagu</span>
+                <h1 class="text-4xl font-black text-gray-900 mt-4 leading-tight"><%= lagu.tajuk %></h1>
+                <p class="text-xl text-yellow-500 font-bold">oleh <%= lagu.penyanyi %></p>
+            </header>
+
+            <div class="text-lg leading-relaxed text-gray-700 whitespace-pre-line font-medium border-l-4 border-yellow-200 pl-6">
+                <%= lirik %>
+            </div>
+
+            <div class="mt-12 pt-8 border-t border-gray-50 text-center">
+                <p class="text-xs text-gray-300 font-bold tracking-widest uppercase">Meow Lyrics Official 🐾</p>
+            </div>
+        </div>
+        
+        <footer class="mt-10 text-center text-gray-400 text-sm">
+            Credits : <span class="text-yellow-500 font-black">MEOW LYRICS</span>
+        </footer>
+    </div>
+</body>
+</html>
