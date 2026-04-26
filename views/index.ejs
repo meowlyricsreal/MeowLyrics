@@ -3,41 +3,49 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeowLyrics | Pusat Lirik Rasmi</title>
+    <title>MeowLyrics | Pusat Lirik & Muzik Rasmi</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
     <style>
-        :root { --main: #FFD32D; --bg: #FFFDF2; --card: rgba(255, 255, 255, 0.9); }
+        :root { --main: #FFD32D; --bg: #FFFDF2; --card: rgba(255, 255, 255, 0.9); --dark: #2D3436; --text: #2D3436; }
+        
+        /* DARK MODE THEME */
+        body.dark-mode { --bg: #1a1a1a; --card: #2d2d2d; --text: #f1f1f1; --dark: #FFD32D; }
+        body.dark-mode nav { background: rgba(26, 26, 26, 0.8); border-bottom-color: #333; }
+        body.dark-mode .search-bar { background: #333; color: white; border-color: #444; }
+        body.dark-mode .lyrics-box { color: #ccc; }
+
         * { box-sizing: border-box; transition: all 0.3s ease; }
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; color: #2D3436; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--bg); margin: 0; color: var(--text); overflow-x: hidden; }
 
         /* Navbar */
-        nav { padding: 25px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.6); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid rgba(0,0,0,0.05); }
-        .logo { font-size: 24px; font-weight: 800; text-decoration: none; color: #2D3436; display: flex; align-items: center; gap: 10px; }
-        .logo span { background: var(--main); padding: 5px 10px; border-radius: 12px; }
-        .nav-links { display: flex; gap: 20px; align-items: center; }
-        .nav-links a { text-decoration: none; color: #2D3436; font-weight: 700; font-size: 14px; }
-        .signup-btn { background: #2D3436; color: white !important; padding: 10px 22px; border-radius: 50px; }
+        nav { padding: 20px 5%; display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.6); backdrop-filter: blur(15px); position: sticky; top: 0; z-index: 1000; border-bottom: 1px solid rgba(0,0,0,0.05); }
+        .logo { font-size: 24px; font-weight: 800; text-decoration: none; color: var(--text); display: flex; align-items: center; gap: 10px; }
+        .logo span { background: #FFD32D; padding: 5px 12px; border-radius: 15px; color: #2D3436; }
+        
+        .nav-links { display: flex; gap: 15px; align-items: center; }
+        .mode-toggle { cursor: pointer; font-size: 20px; background: none; border: none; padding: 5px; }
 
-        /* Hero & Search */
-        .hero { padding: 60px 5% 30px; text-align: center; }
-        .search-box { max-width: 600px; margin: 0 auto; position: relative; }
-        .search-bar { width: 100%; padding: 20px 30px; border-radius: 25px; border: 3px solid white; background: white; font-size: 16px; font-weight: 600; box-shadow: 0 20px 40px rgba(0,0,0,0.05); outline: none; }
-        .search-bar:focus { border-color: var(--main); }
+        /* Hero */
+        .hero { padding: 60px 5% 40px; text-align: center; }
+        .search-bar { width: 100%; max-width: 600px; padding: 20px 30px; border-radius: 30px; border: 3px solid white; background: white; font-size: 16px; font-weight: 600; box-shadow: 0 20px 40px rgba(0,0,0,0.05); outline: none; }
 
-        /* Content Area */
-        .container { padding: 30px 5%; max-width: 900px; margin: 0 auto; }
-        .song-card { background: var(--card); border: 1px solid white; padding: 35px; border-radius: 40px; margin-bottom: 35px; box-shadow: 0 15px 35px rgba(0,0,0,0.03); }
-        .song-title { font-size: 28px; font-weight: 800; margin: 0; }
-        .artist { color: #A4B0BE; font-weight: 700; margin-bottom: 25px; font-size: 18px; }
-        .lyrics { font-size: 17px; line-height: 2; color: #444; white-space: pre-line; margin-bottom: 35px; border-top: 1px solid #eee; padding-top: 20px; }
+        /* Request Button */
+        .req-btn-fixed { position: fixed; bottom: 30px; right: 30px; background: #FFD32D; color: #2D3436; border: none; padding: 15px 25px; border-radius: 50px; font-weight: 800; cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.1); z-index: 999; }
 
-        /* YouTube */
-        .video-box { border-radius: 30px; overflow: hidden; background: #000; aspect-ratio: 16/9; box-shadow: 0 20px 50px rgba(0,0,0,0.15); }
+        /* Song Card */
+        .container { padding: 20px 5%; max-width: 900px; margin: 0 auto; }
+        .song-card { background: var(--card); border: 1px solid rgba(255,255,255,0.3); padding: 35px; border-radius: 40px; margin-bottom: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.02); }
+        .lyrics-box { font-size: 17px; line-height: 2; white-space: pre-line; margin: 25px 0; }
+        .video-wrapper { border-radius: 30px; overflow: hidden; aspect-ratio: 16/9; background: #000; }
         iframe { width: 100%; height: 100%; border: none; }
 
-        /* Footer */
-        footer { padding: 60px 5%; text-align: center; background: #2D3436; color: white; border-radius: 50px 50px 0 0; margin-top: 50px; }
-        .sub-btn { background: #FF0000; color: white; padding: 15px 35px; border-radius: 20px; text-decoration: none; font-weight: 800; display: inline-block; margin-bottom: 25px; }
+        /* Modal Request */
+        #requestModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 2000; align-items: center; justify-content: center; }
+        .modal-content { background: white; padding: 40px; border-radius: 30px; width: 90%; max-width: 400px; color: #2D3436; }
+        .modal-content input { width: 100%; padding: 15px; margin-bottom: 15px; border-radius: 10px; border: 1px solid #ddd; }
+        .submit-req { width: 100%; padding: 15px; background: #FFD32D; border: none; font-weight: 800; border-radius: 10px; cursor: pointer; }
+
+        footer { padding: 60px 5%; text-align: center; background: #2D3436; color: white; margin-top: 50px; }
     </style>
 </head>
 <body>
@@ -45,30 +53,38 @@
     <nav>
         <a href="/" class="logo"><span>🐾</span> MeowLyrics</a>
         <div class="nav-links">
-            <a href="#">Language</a>
-            <a href="login.html" class="signup-btn">SignUp</a>
+            <button class="mode-toggle" id="modeBtn">🌙</button>
+            <a href="/login" style="text-decoration:none; font-weight:800; color:var(--text)">SignUp</a>
         </div>
     </nav>
 
     <div class="hero">
-        <h1 style="font-weight: 800; font-size: 36px;">Cari Lirik Lagu</h1>
-        <div class="search-box">
-            <input type="text" id="searchInput" class="search-bar" placeholder="Masukkan tajuk lagu atau artis...">
+        <h1 style="font-weight: 800;">Apa lagu kegemaran awak?</h1>
+        <input type="text" id="searchInput" class="search-bar" placeholder="Cari lirik lagu...">
+    </div>
+
+    <div class="container" id="lyricsContent"></div>
+
+    <button class="req-btn-fixed" onclick="openModal()">➕ Request Lirik</button>
+
+    <div id="requestModal">
+        <div class="modal-content">
+            <h2 style="margin-top:0">Minta Lirik 🐾</h2>
+            <input type="text" id="reqSong" placeholder="Tajuk Lagu">
+            <input type="text" id="reqArtist" placeholder="Nama Artis">
+            <button class="submit-req" id="sendReq">Hantar Permintaan</button>
+            <button onclick="closeModal()" style="background:none; border:none; margin-top:15px; cursor:pointer; color:#888; width:100%">Tutup</button>
         </div>
     </div>
 
-    <div class="container" id="lyricsList">
-        </div>
-
     <footer>
-        <a href="https://www.youtube.com/@MeowMusicLirik" class="sub-btn">SUBSCRIBE YOUTUBE</a>
-        <p style="font-weight: 800; font-size: 20px; margin-bottom: 10px;">MEOWLYRICS OFFICIAL</p>
-        <p style="opacity: 0.5; font-size: 13px;">© 2026 MeowLyrics. All Rights Reserved.</p>
+        <p style="font-weight: 800;">MEOWLYRICS OFFICIAL</p>
+        <p style="opacity: 0.5; font-size: 12px;">© 2026 Crafted with love.</p>
     </footer>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getFirestore, collection, getDocs, query, orderBy, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
@@ -79,37 +95,60 @@
 
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
-        let songs = [];
+        let allSongs = [];
 
-        async function loadSongs() {
+        // LOAD SONGS
+        async function fetchSongs() {
             const q = query(collection(db, "songs"), orderBy("createdAt", "desc"));
             const snap = await getDocs(q);
-            songs = snap.docs.map(doc => doc.data());
-            render(songs);
+            allSongs = snap.docs.map(doc => doc.data());
+            render(allSongs);
         }
 
         function render(data) {
-            const list = document.getElementById('lyricsList');
-            list.innerHTML = '';
+            const root = document.getElementById('lyricsContent');
+            root.innerHTML = '';
             data.forEach(s => {
                 let vId = s.youtubeUrl ? (s.youtubeUrl.split('v=')[1]?.split('&')[0] || s.youtubeUrl.split('/').pop()) : "";
-                list.innerHTML += `
+                root.innerHTML += `
                     <div class="song-card">
-                        <h2 class="song-title">${s.title}</h2>
-                        <p class="artist">${s.artist}</p>
-                        <div class="lyrics">${s.lyrics}</div>
-                        ${vId ? `<div class="video-box"><iframe src="http://googleusercontent.com/youtube.com/8${vId}" allowfullscreen></iframe></div>` : ''}
+                        <h2 style="margin:0">${s.title}</h2>
+                        <p style="color:#A4B0BE; font-weight:700">${s.artist}</p>
+                        <div class="lyrics-box">${s.lyrics}</div>
+                        ${vId ? `<div class="video-wrapper"><iframe src="youtube.com/@MeowMusicLirik{vId}" allowfullscreen></iframe></div>` : ''}
                     </div>
                 `;
             });
         }
 
+        // SEARCH
         document.getElementById('searchInput').addEventListener('input', (e) => {
             const val = e.target.value.toLowerCase();
-            render(songs.filter(s => s.title.toLowerCase().includes(val) || s.artist.toLowerCase().includes(val)));
+            render(allSongs.filter(s => s.title.toLowerCase().includes(val) || s.artist.toLowerCase().includes(val)));
         });
 
-        loadSongs();
+        // DARK MODE TOGGLE
+        const modeBtn = document.getElementById('modeBtn');
+        modeBtn.onclick = () => {
+            document.body.classList.toggle('dark-mode');
+            modeBtn.innerText = document.body.classList.contains('dark-mode') ? '☀️' : '🌙';
+        };
+
+        // MODAL LOGIC
+        window.openModal = () => document.getElementById('requestModal').style.display = 'flex';
+        window.closeModal = () => document.getElementById('requestModal').style.display = 'none';
+
+        document.getElementById('sendReq').onclick = async () => {
+            const title = document.getElementById('reqSong').value;
+            const artist = document.getElementById('reqArtist').value;
+            if(!title || !artist) return alert("Sila isi!");
+            
+            await addDoc(collection(db, "requests"), { title, artist, time: serverTimestamp() });
+            alert("Permintaan dihantar! Meow akan tambah nanti. 🐾");
+            closeModal();
+        };
+
+        fetchSongs();
     </script>
 </body>
 </html>
