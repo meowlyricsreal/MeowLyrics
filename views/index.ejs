@@ -3,102 +3,167 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
-    <title>Meow Lyrics | Muzik Di Hujung Jari</title>
+    <title>MeowLyrics - Koleksi Lirik Lagu</title>
     <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #FFFDF0; }
-        .glass { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
-        .paw-print { opacity: 0.1; pointer-events: none; position: absolute; }
+        :root {
+            --primary-color: #ff4757;
+            --bg-color: #f4f7f6;
+            --text-color: #2f3542;
+        }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background-color: var(--bg-color); 
+            margin: 0; 
+            padding: 20px; 
+            color: var(--text-color);
+        }
+        header {
+            text-align: center;
+            padding: 30px 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+        }
+        .search-box {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            border: 1px solid #ddd;
+            margin-bottom: 20px;
+            box-sizing: border-box;
+        }
+        .song-list {
+            display: grid;
+            gap: 15px;
+        }
+        .song-card {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            transition: transform 0.2s;
+            text-decoration: none;
+            display: block;
+            border-left: 5px solid var(--primary-color);
+        }
+        .song-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+        }
+        .song-card h3 {
+            margin: 0 0 5px 0;
+            color: var(--primary-color);
+        }
+        .song-card p {
+            margin: 0;
+            color: #747d8c;
+            font-size: 14px;
+        }
+        #loading {
+            text-align: center;
+            padding: 20px;
+            color: #a4b0be;
+        }
+        .nav-buttons {
+            text-align: right;
+            margin-bottom: 20px;
+        }
+        .btn-admin {
+            text-decoration: none;
+            font-size: 12px;
+            color: #747d8c;
+            border: 1px solid #ddd;
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
     </style>
 </head>
-<body class="min-h-screen flex flex-col text-gray-800">
+<body>
 
-    <nav class="glass sticky top-0 z-50 border-b border-yellow-100 p-4">
-        <div class="max-w-5xl mx-auto flex justify-between items-center">
-            <a href="/" class="text-2xl font-black text-yellow-500 flex items-center gap-2">
-                <span class="bg-yellow-400 text-white p-1 rounded-lg">🐾</span> MEOWLYRICS
-            </a>
-            <div class="flex gap-6 font-bold text-sm tracking-wide">
-                <a href="/" class="text-yellow-600 border-b-2 border-yellow-400 pb-1">HOME</a>
-                <a href="/account" class="text-gray-400 hover:text-yellow-500 transition">ACCOUNT</a>
-            </div>
-        </div>
-    </nav>
+<div class="container">
+    <div class="nav-buttons">
+        <a href="/login.html" class="btn-admin">Akaun / Admin</a>
+    </div>
 
-    <header class="py-16 px-6 relative overflow-hidden">
-        <div class="max-w-3xl mx-auto text-center relative z-10">
-            <span class="bg-yellow-200 text-yellow-700 px-4 py-1 rounded-full text-xs font-bold mb-4 inline-block">MEOW-ZIK TERBAIK</span>
-            <h1 class="text-5xl font-black text-gray-900 mb-6 leading-tight">Cari lirik lagu <br><span class="text-yellow-500">kegemaranmu</span> di sini.</h1>
-            
-            <form action="/" method="GET" class="relative max-w-xl mx-auto group">
-                <input type="text" name="q" placeholder="Tulis tajuk lagu atau nama artis..." 
-                    class="w-full p-5 pl-14 rounded-3xl border-2 border-white shadow-2xl focus:border-yellow-400 focus:ring-0 outline-none transition-all text-lg"
-                    value="<%= carian || '' %>">
-                <span class="absolute left-5 top-5 text-2xl group-focus-within:scale-110 transition">🔍</span>
-                <button class="absolute right-3 top-3 bg-yellow-400 text-white px-6 py-2 rounded-2xl font-bold hover:bg-yellow-500 transition">Cari</button>
-            </form>
-        </div>
-        <div class="paw-print text-6xl top-10 left-10 rotate-12">🐾</div>
-        <div class="paw-print text-6xl bottom-5 right-20 -rotate-12">🐾</div>
+    <header>
+        <h1>🐾 MeowLyrics</h1>
+        <p>Cari lirik lagu kegemaran awak di sini</p>
     </header>
 
-    <main class="p-6 max-w-5xl mx-auto w-full flex-grow">
-        <div class="flex items-center justify-between mb-8">
-            <h2 class="text-xl font-extrabold flex items-center gap-2">
-                <div class="w-2 h-8 bg-yellow-400 rounded-full"></div> 
-                <%= carian ? 'Hasil Carian' : 'Lirik Popular' %>
-            </h2>
-            <span class="text-sm text-gray-400 font-medium"><%= lagu.length %> Lagu Dijumpai</span>
-        </div>
+    <input type="text" class="search-box" placeholder="Cari tajuk lagu atau penyanyi..." id="searchInput">
 
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <% lagu.forEach(l => { %>
-                <a href="/lagu/<%= l.slug %>" class="group bg-white p-6 rounded-[32px] shadow-sm hover:shadow-xl hover:-translate-y-2 transition-all duration-300 border border-yellow-50 flex flex-col justify-between h-44 relative overflow-hidden">
-                    <div class="relative z-10">
-                        <h3 class="font-black text-xl text-gray-800 group-hover:text-yellow-500 transition"><%= l.tajuk %></h3>
-                        <p class="text-gray-400 font-medium"><%= l.penyanyi %></p>
-                    </div>
-                    <div class="flex justify-between items-center relative z-10">
-                        <span class="text-xs font-bold text-yellow-600 bg-yellow-50 px-3 py-1 rounded-full">Lihat Lirik</span>
-                        <span class="text-2xl opacity-10 group-hover:opacity-100 group-hover:scale-110 transition duration-500">🐾</span>
-                    </div>
-                    <div class="absolute -bottom-10 -right-10 w-24 h-24 bg-yellow-100 rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition"></div>
-                </a>
-            <% }) %>
+    <div id="loading">Menarik data dari database...</div>
+    <div class="song-list" id="listLirik">
         </div>
+</div>
 
-        <% if(lagu.length == 0) { %>
-            <div class="text-center py-20 bg-white rounded-[40px] shadow-inner border-2 border-dashed border-yellow-200">
-                <span class="text-6xl mb-4 block">😿</span>
-                <p class="text-gray-500 font-bold text-xl uppercase tracking-widest">Maaf, lirik tiada dalam pangkalan data</p>
-            </div>
-        <% } %>
-    </main>
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, getDocs, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <footer class="bg-gray-900 text-white mt-20 pt-16 pb-8 px-6 rounded-t-[50px] relative">
-        <div class="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 mb-12">
-            <div>
-                <h3 class="text-2xl font-black mb-4 text-yellow-400">🐾 MEOWLYRICS</h3>
-                <p class="text-gray-400 text-sm leading-relaxed">
-                    Website lirik lagu paling comel di Malaysia. Kami mengumpulkan beribu lirik lagu khas untuk anda pencinta muzik dan kucing.
-                </p>
-            </div>
-            <div class="md:text-right">
-                <h4 class="font-bold mb-4">Navigasi Pantas</h4>
-                <div class="flex flex-col gap-2 text-gray-400 text-sm">
-                    <a href="/" class="hover:text-yellow-400">Utama</a>
-                    <a href="/account" class="hover:text-yellow-400">Akaun Saya</a>
-                    <a href="#" class="hover:text-yellow-400">Hubungi Kami</a>
-                </div>
-            </div>
-        </div>
-        <div class="max-w-5xl mx-auto pt-8 border-t border-gray-800 text-center">
-            <p class="text-xs text-gray-500 font-medium">
-                © 2026 Credits : <span class="text-yellow-500 font-black tracking-widest">MEOW LYRICS</span>
-            </p>
-        </div>
-    </footer>
+    // Konfigurasi Firebase awak
+    const firebaseConfig = {
+        apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
+        authDomain: "meowlyrics-6eacb.firebaseapp.com",
+        projectId: "meowlyrics-6eacb",
+        storageBucket: "meowlyrics-6eacb.firebasestorage.app",
+        messagingSenderId: "183440345480",
+        appId: "1:183440345480:web:4fb71060be2cc24df0923d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function muatTurunLirik() {
+        const listDiv = document.getElementById('listLirik');
+        const loading = document.getElementById('loading');
+        
+        try {
+            // Ambil data dari koleksi "songs" dan susun ikut tarikh terbaru
+            const q = query(collection(db, "songs"), orderBy("createdAt", "desc"));
+            const querySnapshot = await getDocs(q);
+            
+            loading.style.display = 'none';
+            listDiv.innerHTML = "";
+
+            if (querySnapshot.empty) {
+                listDiv.innerHTML = "<p style='text-align:center;'>Belum ada lagu lagi. Boss kena tambah kat Admin Panel!</p>";
+                return;
+            }
+
+            querySnapshot.forEach((doc) => {
+                const lagu = doc.data();
+                // doc.id adalah slug yang awak masukkan kat Admin Panel
+                listDiv.innerHTML += `
+                    <a href="/lirik/${doc.id}" class="song-card">
+                        <h3>${lagu.tajuk}</h3>
+                        <p>Penyanyi: ${lagu.penyanyi}</p>
+                    </a>
+                `;
+            });
+        } catch (error) {
+            loading.innerText = "Ralat: " + error.message;
+        }
+    }
+
+    // Fungsi carian (Search)
+    document.getElementById('searchInput').addEventListener('keyup', function() {
+        let filter = this.value.toUpperCase();
+        let cards = document.getElementsByClassName('song-card');
+        
+        for (let i = 0; i < cards.length; i++) {
+            let title = cards[i].getElementsByTagName('h3')[0];
+            if (title.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                cards[i].style.display = "";
+            } else {
+                cards[i].style.display = "none";
+            }
+        }
+    });
+
+    muatTurunLirik();
+</script>
 
 </body>
 </html>

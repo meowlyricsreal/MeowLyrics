@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - MeowLyrics</title>
+    <style>
+        body { font-family: sans-serif; padding: 20px; background: #f4f4f4; }
+        .box { max-width: 500px; margin: auto; background: white; padding: 25px; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        h2 { color: #ff4757; text-align: center; }
+        label { font-weight: bold; display: block; margin-top: 10px; }
+        input, textarea { width: 100%; padding: 12px; margin: 5px 0 15px; border: 1px solid #ddd; border-radius: 8px; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #ff4757; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: bold; font-size: 16px; }
+        button:hover { background: #e84118; }
+        #adminArea { display: none; }
+        #noAuth { text-align: center; color: #666; padding: 20px; }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <h2>🐾 Admin MeowLyrics</h2>
+    
+    <div id="adminArea">
+        <p style="text-align:center; color:green;">Selamat datang, Boss!</p>
+        
+        <label>Tajuk Lagu:</label>
+        <input type="text" id="t" placeholder="Contoh: Adek Saye Abe Sore">
+        
+        <label>Nama Penyanyi:</label>
+        <input type="text" id="p" placeholder="Contoh: Man Khan">
+        
+        <label>Slug (URL Lagu):</label>
+        <input type="text" id="s" placeholder="Contoh: adek-saye (Jangan letak jarak)">
+        
+        <label>Lirik Lagu:</label>
+        <textarea id="l" rows="10" placeholder="Tampal lirik lagu kat sini..."></textarea>
+        
+        <button onclick="add()">Tambah Lagu Sekarang</button>
+        <p id="status" style="text-align:center; font-size:12px;"></p>
+    </div>
+
+    <div id="noAuth">
+        <p>Sila login dengan akaun <strong>meowlyrics1@gmail.com</strong> untuk akses.</p>
+        <a href="/login.html" style="color:#ff4757;">Pergi ke Halaman Login</a>
+    </div>
+</div>
+
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+    import { getFirestore, doc, setDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Guna config Firebase awak
+    const firebaseConfig = {
+        apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
+        authDomain: "meowlyrics-6eacb.firebaseapp.com",
+        projectId: "meowlyrics-6eacb",
+        appId: "1:183440345480:web:4fb71060be2cc24df0923d"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    // Semak jika user adalah admin
+    onAuthStateChanged(auth, (user) => {
+        if(user && user.email === "meowlyrics1@gmail.com") {
+            document.getElementById('adminArea').style.display = 'block';
+            document.getElementById('noAuth').style.display = 'none';
+        }
+    });
+
+    // Fungsi simpan lagu ke Firebase
+    window.add = async () => {
+        const slug = document.getElementById('s').value;
+        const status = document.getElementById('status');
+        
+        if(!slug) return alert("Slug wajib isi!");
+
+        try {
+            status.innerText = "Sedang menyimpan...";
+            await setDoc(doc(db, "songs", slug), {
+                tajuk: document.getElementById('t').value,
+                penyanyi: document.getElementById('p').value,
+                lirik: document.getElementById('l').value,
+                createdAt: new Date()
+            });
+            alert("Berjaya! Lagu dah masuk database.");
+            location.reload();
+        } catch (e) {
+            alert("Ralat: " + e.message);
+        }
+    };
+</script>
+</body>
+</html>
