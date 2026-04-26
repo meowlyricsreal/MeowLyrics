@@ -3,51 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MeowLyrics | Masuk</title>
+    <title>MeowLyrics | Sertai Kami</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --soft-yellow: #FFF9E3; --deep-yellow: #FFD32D; --text: #444; }
+        :root { --soft-yellow: #FFF9E3; --main: #FFD32D; --dark: #2D3436; }
         body { 
             font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--soft-yellow); 
+            background: var(--soft-yellow); 
             margin: 0; display: flex; justify-content: center; align-items: center; height: 100vh;
         }
-        .login-box {
-            background: white; padding: 40px; border-radius: 30px; width: 85%; max-width: 350px;
-            box-shadow: 0 15px 35px rgba(255, 211, 45, 0.2); text-align: center;
+        .auth-card {
+            background: white; padding: 40px; border-radius: 35px; width: 85%; max-width: 380px;
+            box-shadow: 0 20px 40px rgba(255, 211, 45, 0.15); text-align: center;
         }
-        .logo-text { font-weight: 800; font-size: 24px; color: var(--text); margin-bottom: 20px; }
-        .logo-text span { background: var(--deep-yellow); padding: 4px 10px; border-radius: 10px; }
-        
+        .logo-box span { background: var(--main); padding: 5px 12px; border-radius: 12px; font-weight: 800; }
+        h2 { margin-top: 20px; font-weight: 800; color: var(--dark); }
         input { 
-            width: 100%; padding: 15px; margin-bottom: 12px; border-radius: 15px; 
-            border: 2px solid #F1F1F1; outline: none; box-sizing: border-box; font-weight: 600;
+            width: 100%; padding: 16px; margin-bottom: 12px; border-radius: 18px; 
+            border: 2px solid #F1F1F1; outline: none; font-weight: 600; box-sizing: border-box;
         }
-        input:focus { border-color: var(--deep-yellow); }
-        
-        .btn-masuk { 
-            width: 100%; padding: 15px; border-radius: 15px; border: none; 
-            background: var(--deep-yellow); color: #333; font-weight: 800; cursor: pointer;
+        input:focus { border-color: var(--main); }
+        .btn-action { 
+            width: 100%; padding: 16px; border-radius: 18px; border: none; 
+            background: var(--main); color: var(--dark); font-weight: 800; cursor: pointer; margin-top: 10px;
         }
-        .switch-text { font-size: 13px; margin-top: 20px; color: #888; cursor: pointer; font-weight: 700; }
-        .error-msg { color: #ff4757; font-size: 12px; margin-bottom: 10px; display: none; font-weight: 700; }
+        .toggle-text { font-size: 13px; margin-top: 20px; color: #888; cursor: pointer; font-weight: 700; }
+        #error-msg { color: #ff4757; font-size: 12px; margin-bottom: 15px; display: none; font-weight: 800; }
     </style>
 </head>
 <body>
 
-    <div class="login-box">
-        <div class="logo-text"><span>Meow</span>Lyrics</div>
-        <p style="font-size: 14px; color: #777;" id="desc">Sila masukkan nama akaun unik awak</p>
-        
-        <div id="error-box" class="error-msg"></div>
+    <div class="auth-card">
+        <div class="logo-box"><span>Meow</span>Lyrics</div>
+        <h2 id="form-title">Log Masuk</h2>
+        <p style="color:#777; font-size:14px; margin-bottom:25px;" id="form-desc">Gunakan nama unik awak</p>
 
-        <input type="text" id="username" placeholder="Nama Akaun (Contoh: bloxy)">
+        <div id="error-msg"></div>
+
+        <input type="text" id="username" placeholder="Nama Akaun (e.g. bloxy)">
         <input type="password" id="password" placeholder="Kata Laluan">
 
-        <button class="btn-masuk" id="actionBtn">Masuk Sekarang</button>
-        <div class="switch-text" id="toggleBtn">Belum ada akaun? Daftar di sini</div>
+        <button class="btn-action" id="submitBtn">Masuk Sekarang</button>
+        <div class="toggle-text" id="toggleMode">Belum ada akaun? Daftar di sini</div>
         
-        <a href="/" style="display:block; margin-top:15px; text-decoration:none; font-size:12px; color: #aaa;">Kembali ke Utama</a>
+        <a href="/" style="display:block; margin-top:20px; text-decoration:none; font-size:12px; color:#aaa;">← Balik ke Home</a>
     </div>
 
     <script type="module">
@@ -67,24 +66,24 @@
         const db = getFirestore(app);
 
         let isLogin = true;
-        const actionBtn = document.getElementById('actionBtn');
-        const toggleBtn = document.getElementById('toggleBtn');
-        const errorBox = document.getElementById('error-box');
+        const submitBtn = document.getElementById('submitBtn');
+        const toggleMode = document.getElementById('toggleMode');
+        const errorBox = document.getElementById('error-msg');
 
-        toggleBtn.onclick = () => {
+        toggleMode.onclick = () => {
             isLogin = !isLogin;
-            document.getElementById('desc').innerText = isLogin ? "Sila masukkan nama akaun unik awak" : "Cipta akaun baru awak sekarang";
-            actionBtn.innerText = isLogin ? "Masuk Sekarang" : "Daftar Akaun";
-            toggleBtn.innerText = isLogin ? "Belum ada akaun? Daftar di sini" : "Dah ada akaun? Log masuk";
+            document.getElementById('form-title').innerText = isLogin ? "Log Masuk" : "Daftar Akaun";
+            submitBtn.innerText = isLogin ? "Masuk Sekarang" : "Daftar Sekarang";
+            toggleMode.innerText = isLogin ? "Belum ada akaun? Daftar di sini" : "Dah ada akaun? Log masuk";
         };
 
-        actionBtn.onclick = async () => {
+        submitBtn.onclick = async () => {
             const user = document.getElementById('username').value.trim().toLowerCase();
             const pass = document.getElementById('password').value;
-            const fakeEmail = `${user}@meowlyrics.com`; // Trik fix unauthorized domain
+            const fakeEmail = `${user}@meow.com`;
 
             if(!user || pass.length < 6) {
-                errorBox.innerText = "Isi semua & Password min 6 aksara!";
+                errorBox.innerText = "Isi semua & Password min 6 huruf!";
                 errorBox.style.display = "block";
                 return;
             }
@@ -93,17 +92,16 @@
                 if(isLogin) {
                     await signInWithEmailAndPassword(auth, fakeEmail, pass);
                 } else {
-                    const userRef = doc(db, "usernames", user);
-                    const snap = await getDoc(userRef);
-                    if(snap.exists()) throw new Error("Nama akaun sudah diambil!");
+                    const snap = await getDoc(doc(db, "usernames", user));
+                    if(snap.exists()) throw new Error("Nama akaun sudah digunakan!");
                     
                     const res = await createUserWithEmailAndPassword(auth, fakeEmail, pass);
-                    await setDoc(userRef, { uid: res.user.uid });
+                    await setDoc(doc(db, "usernames", user), { uid: res.user.uid });
                     await updateProfile(res.user, { displayName: user });
                 }
                 window.location.href = "/";
             } catch (e) {
-                errorBox.innerText = e.message;
+                errorBox.innerText = "Ralat: " + e.message;
                 errorBox.style.display = "block";
             }
         };
