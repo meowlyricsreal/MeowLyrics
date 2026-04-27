@@ -3,93 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MeowLyrics | Official</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap" rel="stylesheet">
+    <title>MeowLyrics | The Future of Lyrics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root { --primary: #FFD32D; --soft-bg: #FFF9E3; --white: #FFFFFF; --dark: #2D3436; }
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
-        body { background-color: var(--soft-bg); margin: 0; color: var(--dark); padding-bottom: 100px; overflow-x: hidden; }
+        :root {
+            --primary: #FFD32D;
+            --dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.9);
+            --shadow: 0 20px 40px rgba(0,0,0,0.05);
+        }
 
-        /* Loader */
-        #loader { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: var(--dark); z-index: 9999; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        .fade-out { opacity: 0 !important; visibility: hidden !important; pointer-events: none !important; }
-        .spinner { width: 40px; height: 40px; border: 4px solid var(--primary); border-top-color: transparent; border-radius: 50%; animation: spin 1s infinite linear; }
-        @keyframes spin { to { transform: rotate(360deg); } }
+        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
 
-        /* Header & Search */
-        header { padding: 30px 20px; display: flex; justify-content: space-between; align-items: center; }
-        .logo { font-weight: 800; font-size: 22px; text-decoration: none; color: var(--dark); }
-        .logo span { background: var(--primary); padding: 5px 10px; border-radius: 12px; }
-        .search-area { padding: 0 20px; margin-bottom: 25px; }
-        #searchInput { width: 100%; padding: 18px 25px; border-radius: 20px; border: none; box-shadow: 0 10px 30px rgba(255, 211, 45, 0.2); font-weight: 600; outline: none; }
+        body { 
+            margin: 0; 
+            background: #f8fafc;
+            color: var(--dark);
+            overflow-x: hidden;
+            /* Kesan background premium yang bergerak */
+            background: linear-gradient(-45deg, #f8fafc, #fff9e3, #f1f5f9, #fffbeb);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+        }
 
-        /* Song Cards */
-        .container { padding: 0 20px; }
-        .card { background: var(--white); border-radius: 25px; padding: 25px; margin-bottom: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.03); border: 1px solid rgba(255,255,255,0.5); }
-        .card h2 { margin: 0; font-size: 19px; }
-        .card p.artist { color: var(--primary); font-weight: 800; font-size: 13px; margin: 5px 0 10px; text-transform: uppercase; }
-        
-        audio { width: 100%; margin: 10px 0; border-radius: 10px; height: 35px; }
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
 
-        .lyrics-box { max-height: 0; overflow: hidden; transition: max-height 0.6s ease-in-out; font-size: 16px; line-height: 2.2; color: #555; }
-        .lyrics-box.open { max-height: 3000px; border-top: 1px solid #eee; margin-top: 15px; padding-top: 15px; }
-        .btn-toggle { width: 100%; padding: 12px; border-radius: 15px; border: 1.5px solid #eee; background: #fafafa; font-weight: 800; cursor: pointer; color: #888; margin-top: 10px; }
+        /* --- Header Premium --- */
+        header { 
+            padding: 50px 25px 30px;
+            text-align: center;
+        }
+        .logo { 
+            font-weight: 800; font-size: 32px; text-decoration: none; color: var(--dark); 
+            letter-spacing: -1.5px; display: inline-block;
+        }
+        .logo span { color: var(--primary); text-shadow: 0 4px 10px rgba(255, 211, 45, 0.4); }
 
-        /* Action Bar & Comments */
-        .action-bar { display: flex; gap: 15px; margin-top: 15px; }
-        .action-btn { background: none; border: none; font-weight: 800; font-size: 13px; cursor: pointer; color: #666; display: flex; align-items: center; gap: 5px; }
-        .comment-sec { margin-top: 15px; display: none; background: #f9f9f9; padding: 15px; border-radius: 15px; }
-        .comment-sec.show { display: block; }
-        .comment-list { max-height: 150px; overflow-y: auto; font-size: 12px; margin-top: 10px; border-top: 1px solid #eee; padding-top: 10px; }
+        /* --- Floating Search --- */
+        .search-wrap {
+            position: sticky; top: 20px; z-index: 1000;
+            padding: 0 20px; margin-bottom: 50px;
+        }
+        #searchInput {
+            width: 100%; padding: 22px 30px; border-radius: 30px;
+            border: 2px solid rgba(255,255,255,1);
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(15px) saturate(180%);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.05);
+            font-size: 16px; font-weight: 600; outline: none;
+            transition: 0.4s;
+        }
+        #searchInput:focus {
+            box-shadow: 0 20px 40px rgba(255, 211, 45, 0.25);
+            transform: scale(1.02);
+            border-color: var(--primary);
+        }
 
-        /* Modal Request */
-        #requestModal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center; }
-        .modal-content { background: white; width: 85%; max-width: 400px; padding: 30px; border-radius: 30px; text-align: center; }
-        .modal-content input { width: 100%; padding: 15px; margin: 10px 0; border-radius: 15px; border: 1px solid #ddd; outline: none; }
-        .btn-send { width: 100%; padding: 15px; background: var(--primary); border: none; border-radius: 15px; font-weight: 800; cursor: pointer; }
+        /* --- Feed & Cards --- */
+        .feed { 
+            padding: 0 20px; max-width: 600px; margin: auto;
+            display: flex; flex-direction: column; gap: 40px; 
+        }
 
-        /* Bottom Nav */
-        .nav-bar { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 85%; max-width: 400px; background: var(--dark); padding: 12px; border-radius: 25px; display: flex; justify-content: space-around; z-index: 1000; }
-        .nav-item { color: #888; text-decoration: none; font-weight: 800; font-size: 11px; cursor: pointer; }
-        .nav-item.active { color: var(--primary); }
+        .song-card {
+            background: var(--glass);
+            border-radius: 40px;
+            padding: 40px;
+            border: 1px solid rgba(255,255,255,1);
+            box-shadow: var(--shadow);
+            opacity: 0; transform: translateY(40px) scale(0.95);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .song-card.visible { opacity: 1; transform: translateY(0) scale(1); }
+
+        .song-card .meta { margin-bottom: 25px; }
+        .song-card .artist { 
+            display: inline-block; background: #FFF9E3; color: #D97706;
+            padding: 6px 14px; border-radius: 12px; font-weight: 800; 
+            font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px;
+            margin-bottom: 12px;
+        }
+        .song-card h2 { margin: 0; font-size: 28px; font-weight: 800; letter-spacing: -0.5px; }
+
+        /* Audio Player Styling */
+        audio { 
+            width: 100%; margin: 25px 0; height: 45px; 
+            border-radius: 50px; opacity: 0.8;
+        }
+
+        .lyrics-content {
+            font-size: 18px; line-height: 2.4; color: #334155;
+            white-space: pre-line; font-weight: 500;
+            background: linear-gradient(to bottom, #334155, #64748b);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* --- Bottom Nav (Premium Glass) --- */
+        .nav-bar {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: rgba(15, 23, 42, 0.9); padding: 15px 40px;
+            border-radius: 100px; display: flex; gap: 40px; 
+            backdrop-filter: blur(20px); z-index: 1000;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .nav-btn { 
+            color: #94a3b8; text-decoration: none; font-size: 11px; 
+            font-weight: 800; letter-spacing: 1px; cursor: pointer; transition: 0.3s;
+        }
+        .nav-btn.active, .nav-btn:hover { color: var(--primary); }
+
+        /* --- Fancy Loader --- */
+        #loader {
+            position: fixed; inset: 0; background: #fff; z-index: 9999;
+            display: flex; justify-content: center; align-items: center; transition: 1s;
+        }
+        #loader.done { opacity: 0; visibility: hidden; }
+        .meow-load { font-size: 30px; font-weight: 800; animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.1); } }
     </style>
 </head>
 <body>
 
-    <div id="loader"><div class="spinner"></div><p style="color:white; margin-top:15px; font-weight:800;">MEOWLYRICS</p></div>
+    <div id="loader"><div class="meow-load">Meow<span>Lyrics.</span></div></div>
 
     <header>
-        <a href="/" class="logo"><span>Meow</span>Lyrics</a>
-        <div id="user-info" style="font-weight:800; font-size:12px;"></div>
+        <a href="/" class="logo">Meow<span>.</span></a>
     </header>
 
-    <div class="search-area">
-        <input type="text" id="searchInput" placeholder="Cari tajuk lagu atau artis...">
+    <div class="search-wrap">
+        <input type="text" id="searchInput" placeholder="Cari mood lagu awak...">
     </div>
 
-    <div class="container" id="song-list"></div>
-
-    <div id="requestModal">
-        <div class="modal-content">
-            <h2 style="margin-top:0;">Request Lirik 🐾</h2>
-            <input type="text" id="reqTitle" placeholder="Tajuk Lagu">
-            <input type="text" id="reqArtist" placeholder="Nama Artis">
-            <button class="btn-send" onclick="sendRequest()">Hantar Request</button>
-            <p onclick="closeRequest()" style="margin-top:15px; font-size:12px; color:#aaa; cursor:pointer;">Batal</p>
-        </div>
-    </div>
+    <main class="feed" id="song-feed"></main>
 
     <div class="nav-bar">
-        <a href="/" class="nav-item active">HOME</a>
-        <div class="nav-item" onclick="openRequest()">REQUEST</div>
-        <a href="/login" class="nav-item" id="acc-text">ACCOUNT</a>
-        <a href="/admin" class="nav-item" id="admin-link" style="display:none; color:#ff4757;">ADMIN</a>
+        <a href="/" class="nav-btn active">FEED</a>
+        <div class="nav-btn" onclick="window.openRequest()">REQUEST</div>
+        <a href="/login" class="nav-link" id="acc-btn" style="text-decoration:none; color:inherit; font-size:11px; font-weight:800; color:#94a3b8;">ACCOUNT</a>
+        <a href="/admin" class="nav-btn" id="admin-btn" style="display:none;">ADMIN</a>
     </div>
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, collection, onSnapshot, query, orderBy, doc, updateDoc, increment, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
         const firebaseConfig = {
             apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
@@ -102,103 +164,60 @@
         const auth = getAuth(app);
         const db = getFirestore(app);
 
-        // 1. Loader Logic
-        window.addEventListener('load', () => setTimeout(() => document.getElementById('loader').classList.add('fade-out'), 1000));
+        // Hide Loader
+        window.onload = () => setTimeout(() => document.getElementById('loader').classList.add('done'), 1200);
 
-        // 2. Data Management & Real-time Search
-        let allSongs = [];
+        let dataLagu = [];
+
+        // Fetch Songs
         onSnapshot(query(collection(db, "songs"), orderBy("createdAt", "desc")), (snap) => {
-            allSongs = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            renderSongs(allSongs);
+            dataLagu = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+            paparLagu(dataLagu);
         });
 
-        function renderSongs(songs) {
-            const list = document.getElementById('song-list');
-            list.innerHTML = songs.length ? '' : '<center style="padding:50px; opacity:0.5;">Lagu tak dijumpai meow...</center>';
+        function paparLagu(list) {
+            const container = document.getElementById('song-feed');
+            container.innerHTML = '';
             
-            songs.forEach(s => {
-                const id = s.id;
-                const audioPlayer = s.audioUrl ? `<audio controls><source src="${s.audioUrl}" type="audio/mpeg"></audio>` : '';
+            list.forEach(s => {
                 const card = document.createElement('div');
-                card.className = 'card';
+                card.className = 'song-card';
                 card.innerHTML = `
-                    <h2>${s.title}</h2>
-                    <p class="artist">${s.artist}</p>
-                    ${audioPlayer}
-                    <button class="btn-toggle" onclick="toggleLirik(this)">Buka Lirik ▾</button>
-                    <div class="lyrics-box">${s.lyrics.replace(/\n/g, '<br>')}</div>
-                    <div class="action-bar">
-                        <button class="action-btn" onclick="likeSong('${id}')">❤ <span>${s.likes || 0}</span></button>
-                        <button class="action-btn" onclick="toggleCom('${id}')">💬 Komen</button>
+                    <div class="meta">
+                        <span class="artist">${s.artist}</span>
+                        <h2>${s.title}</h2>
                     </div>
-                    <div class="comment-sec" id="com-sec-${id}">
-                        <div style="display:flex; gap:5px;">
-                            <input type="text" id="in-${id}" placeholder="Tulis komen..." style="flex:1; padding:8px; border-radius:10px; border:1px solid #ddd;">
-                            <button onclick="postCom('${id}')" style="background:var(--primary); border:none; padding:8px 15px; border-radius:10px; font-weight:800;">Post</button>
-                        </div>
-                        <div class="comment-list" id="list-${id}">Memuatkan...</div>
-                    </div>
+                    ${s.audioUrl ? `<audio controls><source src="${s.audioUrl}" type="audio/mpeg"></audio>` : ''}
+                    <div class="lyrics-content">${s.lyrics}</div>
                 `;
-                list.appendChild(card);
-                loadComments(id);
+                container.appendChild(card);
             });
+            handleScroll(); // Check visibility
         }
 
+        // Search
         document.getElementById('searchInput').oninput = (e) => {
             const val = e.target.value.toLowerCase();
-            renderSongs(allSongs.filter(s => s.title.toLowerCase().includes(val) || s.artist.toLowerCase().includes(val)));
+            paparLagu(dataLagu.filter(s => s.title.toLowerCase().includes(val) || s.artist.toLowerCase().includes(val)));
         };
 
-        // 3. Interaction & Features
-        window.toggleLirik = (btn) => {
-            const box = btn.nextElementSibling;
-            box.classList.toggle('open');
-            btn.innerText = box.classList.contains('open') ? 'Tutup Lirik ▴' : 'Buka Lirik ▾';
-        };
-
-        window.toggleCom = (id) => document.getElementById(`com-sec-${id}`).classList.toggle('show');
-
-        window.likeSong = async (id) => {
-            if(!auth.currentUser) return alert("Sila login untuk Like!");
-            await updateDoc(doc(db, "songs", id), { likes: increment(1) });
-        };
-
-        window.postCom = async (id) => {
-            if(!auth.currentUser) return alert("Sila login untuk Komen!");
-            const val = document.getElementById(`in-${id}`).value;
-            if(!val) return;
-            await addDoc(collection(db, "songs", id, "comments"), { text: val, name: auth.currentUser.displayName, time: serverTimestamp() });
-            document.getElementById(`in-${id}`).value = '';
-        };
-
-        window.loadComments = (id) => {
-            onSnapshot(query(collection(db, "songs", id, "comments"), orderBy("time", "desc")), (s) => {
-                const list = document.getElementById(`list-${id}`);
-                list.innerHTML = s.docs.map(d => `<div><b>@${d.data().name}</b>: ${d.data().text}</div>`).join('') || 'Tiada komen.';
+        // Scroll Reveal Animation
+        function handleScroll() {
+            const cards = document.querySelectorAll('.song-card');
+            cards.forEach(card => {
+                const rect = card.getBoundingClientRect();
+                if (rect.top < window.innerHeight * 0.9) {
+                    card.classList.add('visible');
+                }
             });
-        };
+        }
+        window.addEventListener('scroll', handleScroll);
 
-        // 4. Request System
-        window.openRequest = () => { if(!auth.currentUser) return alert("Sila login!"); document.getElementById('requestModal').style.display='flex'; };
-        window.closeRequest = () => document.getElementById('requestModal').style.display='none';
-        window.sendRequest = async () => {
-            const title = document.getElementById('reqTitle').value;
-            const artist = document.getElementById('reqArtist').value;
-            if(!title || !artist) return alert("Isi info!");
-            await addDoc(collection(db, "requests"), { title, artist, user: auth.currentUser.displayName, time: serverTimestamp() });
-            alert("Hantar!"); closeRequest();
-        };
-
-        // 5. Auth State
+        // Auth
         onAuthStateChanged(auth, (user) => {
-            const ui = document.getElementById('user-info');
-            const acc = document.getElementById('acc-text');
-            if (user) {
-                ui.innerHTML = `<span onclick="signOut(auth).then(()=>location.reload())" style="cursor:pointer; color:#ff4757;">Logout</span>`;
-                acc.innerText = user.displayName?.toUpperCase() || "PROFIL";
-                if (user.email === "meowlyrics1@gmail.com") document.getElementById('admin-link').style.display = "block";
-            } else {
-                ui.innerHTML = `<a href="/login" style="text-decoration:none; color:inherit;">Login</a>`;
+            if(user) {
+                document.getElementById('acc-btn').innerText = user.displayName?.toUpperCase() || "PROFIL";
+                if(user.email === "meowlyrics1@gmail.com") document.getElementById('admin-btn').style.display = 'block';
             }
         });
     </script>
