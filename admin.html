@@ -3,175 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meow Admin | Control Center</title>
+    <title>Meow Admin | Pro Control</title>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary: #FFD32D;
-            --bg: #f3f4f6;
-            --white: #ffffff;
-            --text: #1f2937;
-        }
-
+        :root { --p: #FFF9C4; --p-dark: #FDD835; --bg: #f8fafc; --txt: #1e293b; }
         * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.3s; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-
-        .container { max-width: 1000px; margin: auto; }
-        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
-        .header h1 { font-weight: 800; font-size: 28px; }
-
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px; }
+        body { background: var(--bg); color: var(--txt); margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: auto; }
+        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
+        h2 { margin-bottom: 20px; font-weight: 800; border-left: 5px solid var(--p-dark); padding-left: 15px; }
+        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #f1f5f9; border-radius: 12px; outline: none; background: #f8fafc; }
+        input:focus { border-color: var(--p-dark); }
+        button { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; background: var(--p); color: #856404; margin-top: 10px; }
+        button:hover { background: var(--p-dark); }
         
-        .card { 
-            background: var(--white); padding: 30px; border-radius: 24px; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);
-        }
-
-        h3 { margin-bottom: 20px; font-weight: 800; display: flex; align-items: center; gap: 10px; }
-        
-        label { font-size: 12px; font-weight: 800; color: #6b7280; text-transform: uppercase; margin-top: 15px; display: block; }
-        
-        input, textarea { 
-            width: 100%; padding: 14px; margin-top: 8px; border-radius: 14px; 
-            border: 2px solid #f3f4f6; background: #f9fafb; outline: none; font-size: 15px;
-        }
-        input:focus, textarea:focus { border-color: var(--primary); background: #fff; }
-
-        button { 
-            width: 100%; padding: 16px; margin-top: 20px; border-radius: 16px; border: none; 
-            background: var(--primary); font-weight: 800; cursor: pointer; font-size: 14px;
-            box-shadow: 0 8px 15px rgba(255, 211, 45, 0.2);
-        }
-        button:active { transform: scale(0.98); }
-
-        /* --- List Styles --- */
-        .manage-card { grid-column: 1 / -1; }
-        .list-header { display: flex; justify-content: space-between; margin-bottom: 15px; padding: 0 10px; }
-        .item-row { 
-            display: flex; justify-content: space-between; align-items: center; 
-            background: #f9fafb; padding: 15px 20px; border-radius: 18px; margin-bottom: 10px;
-        }
-        .item-info b { font-size: 15px; }
-        .item-info p { font-size: 12px; margin: 0; color: #6b7280; }
-        
-        .btn-del { 
-            background: #fee2e2; color: #ef4444; width: auto; padding: 8px 15px; 
-            margin: 0; box-shadow: none; font-size: 12px; 
-        }
-
-        .back-web { text-decoration: none; color: #6b7280; font-weight: 700; font-size: 14px; }
+        .list-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
+        .item-row { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #fff; border-radius: 12px; border: 1px solid #f1f5f9; margin-bottom: 10px; }
+        .item-row img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
+        .btn-del { background: #fee2e2; color: #ef4444; width: auto; padding: 5px 12px; margin: 0; font-size: 11px; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="header">
-            <h1>Admin<span> Dashboard</span></h1>
-            <a href="/" class="back-web">← Lihat Website</a>
+<div class="container">
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
+        <h1>Admin Control 👑</h1>
+        <a href="/" style="text-decoration:none; font-weight:800; color:var(--p-dark);">← Balik Website</a>
+    </div>
+
+    <div class="list-grid">
+        <div class="card">
+            <h2>🖼️ Tambah Album</h2>
+            <input type="text" id="albN" placeholder="Nama Album/Artis">
+            <input type="text" id="albU" placeholder="URL Gambar Album">
+            <button onclick="saveAlb()">Simpan Album</button>
+            <div id="albList" style="margin-top:20px;"></div>
         </div>
 
-        <div class="grid">
-            <div class="card">
-                <h3>🖼️ Album Slider</h3>
-                <label>Nama Album / Penyanyi</label>
-                <input type="text" id="albName" placeholder="Cth: Justin Bieber">
-                <label>URL Gambar (Direct Link)</label>
-                <input type="text" id="albUrl" placeholder="https://image.jpg">
-                <button onclick="saveAlbum()">Tambah ke Slider</button>
-            </div>
-
-            <div class="card">
-                <h3>🎵 Tambah Lirik</h3>
-                <label>Tajuk Lagu</label>
-                <input type="text" id="sTitle" placeholder="Cth: Ghost">
-                <label>Artis</label>
-                <input type="text" id="sArtist" placeholder="Cth: Justin Bieber">
-                <label>URL Audio (Optional)</label>
-                <input type="text" id="sAudio" placeholder="Cth: https://...mp3">
-                <label>Lirik Penuh</label>
-                <textarea id="sLyrics" rows="5" placeholder="Masukkan lirik di sini..."></textarea>
-                <button onclick="saveSong()">Terbitkan Lirik</button>
-            </div>
-
-            <div class="card manage-card">
-                <h3>📂 Urus Lagu</h3>
-                <div id="songList">
-                    </div>
-            </div>
+        <div class="card">
+            <h2>🎵 Tambah Lirik</h2>
+            <input type="text" id="sT" placeholder="Tajuk Lagu">
+            <input type="text" id="sA" placeholder="Nama Artis">
+            <input type="text" id="sAu" placeholder="URL Audio (Optional)">
+            <textarea id="sL" rows="4" placeholder="Lirik..."></textarea>
+            <button onclick="saveSong()">Terbitkan Lirik</button>
         </div>
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <div class="card">
+        <h2>📂 Urus Semua Lagu</h2>
+        <div id="songList"></div>
+    </div>
+</div>
 
-        // Konfigurasi Firebase (Guna yang sama macam index.ejs)
-        const firebaseConfig = {
-            apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
-            authDomain: "meowlyrics-6eacb.firebaseapp.com",
-            projectId: "meowlyrics-6eacb",
-            appId: "1:183440345480:web:4fb71060be2cc24df0923d"
-        };
+<script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
+    const firebaseConfig = {
+        apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
+        authDomain: "meowlyrics-6eacb.firebaseapp.com",
+        projectId: "meowlyrics-6eacb",
+        appId: "1:183440345480:web:4fb71060be2cc24df0923d"
+    };
 
-        // 1. Simpan Album
-        window.saveAlbum = async () => {
-            const name = document.getElementById('albName').value;
-            const url = document.getElementById('albUrl').value;
-            if(!name || !url) return alert("Sila isi nama dan URL gambar!");
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
 
+    // ALBUM FUNCTIONS
+    window.saveAlb = async () => {
+        const name = document.getElementById('albN').value;
+        const url = document.getElementById('albU').value;
+        if(name && url) {
             await addDoc(collection(db, "albums"), { name, url });
-            alert("Album berjaya ditambah ke slider!");
-            document.getElementById('albName').value = '';
-            document.getElementById('albUrl').value = '';
-        };
+            alert("Album ditambah!");
+            document.getElementById('albN').value = ''; document.getElementById('albU').value = '';
+        }
+    };
 
-        // 2. Simpan Lagu
-        window.saveSong = async () => {
-            const title = document.getElementById('sTitle').value;
-            const artist = document.getElementById('sArtist').value;
-            const lyrics = document.getElementById('sLyrics').value;
-            const audio = document.getElementById('sAudio').value;
-
-            if(!title || !artist || !lyrics) return alert("Lirik, tajuk dan artis wajib diisi!");
-
-            await addDoc(collection(db, "songs"), {
-                title, artist, lyrics, audioUrl: audio,
-                createdAt: serverTimestamp()
-            });
-            alert("Lirik berjaya diterbitkan!");
-            document.getElementById('sTitle').value = '';
-            document.getElementById('sArtist').value = '';
-            document.getElementById('sLyrics').value = '';
-            document.getElementById('sAudio').value = '';
-        };
-
-        // 3. Papar Senarai Lagu & Fungsi Delete
-        onSnapshot(collection(db, "songs"), s => {
-            const container = document.getElementById('songList');
-            container.innerHTML = '';
-            s.forEach(d => {
-                const data = d.data();
-                container.innerHTML += `
-                    <div class="item-row">
-                        <div class="item-info">
-                            <b>${data.title}</b>
-                            <p>${data.artist}</p>
-                        </div>
-                        <button class="btn-del" onclick="hapusLagu('${d.id}')">HAPUS</button>
+    onSnapshot(collection(db, "albums"), s => {
+        const div = document.getElementById('albList');
+        div.innerHTML = '<b>Senarai Album:</b>';
+        s.forEach(d => {
+            div.innerHTML += `
+                <div class="item-row">
+                    <div style="display:flex; align-items:center; gap:10px;">
+                        <img src="${d.data().url}">
+                        <span>${d.data().name}</span>
                     </div>
-                `;
-            });
+                    <button class="btn-del" onclick="delDoc('albums', '${d.id}')">Hapus</button>
+                </div>`;
         });
+    });
 
-        window.hapusLagu = async (id) => {
-            if(confirm("Betul ke nak hapus lirik ni?")) {
-                await deleteDoc(doc(db, "songs", id));
-                alert("Lirik telah dipadam.");
-            }
-        };
-    </script>
+    // SONG FUNCTIONS
+    window.saveSong = async () => {
+        const title = document.getElementById('sT').value;
+        const artist = document.getElementById('sA').value;
+        const lyrics = document.getElementById('sL').value;
+        if(title && artist && lyrics) {
+            await addDoc(collection(db, "songs"), { title, artist, lyrics, audioUrl: document.getElementById('sAu').value, likes: 0, createdAt: serverTimestamp() });
+            alert("Lirik ditambah!");
+            document.getElementById('sT').value = ''; document.getElementById('sA').value = ''; document.getElementById('sL').value = '';
+        }
+    };
+
+    onSnapshot(collection(db, "songs"), s => {
+        const div = document.getElementById('songList');
+        div.innerHTML = '';
+        s.forEach(d => {
+            div.innerHTML += `
+                <div class="item-row">
+                    <div><b>${d.data().title}</b> - ${d.data().artist}</div>
+                    <button class="btn-del" onclick="delDoc('songs', '${d.id}')">Hapus</button>
+                </div>`;
+        });
+    });
+
+    window.delDoc = async (col, id) => {
+        if(confirm("Betul nak hapus?")) await deleteDoc(doc(db, col, id));
+    };
+</script>
 </body>
 </html>
