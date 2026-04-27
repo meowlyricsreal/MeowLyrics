@@ -2,127 +2,80 @@
 <html lang="ms">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Meow Admin | Pro Control</title>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <title>Meow Admin | Control Panel</title>
     <style>
-        :root { --p: #FFF9C4; --p-dark: #FDD835; --bg: #f8fafc; --txt: #1e293b; }
-        * { box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; transition: 0.3s; }
-        body { background: var(--bg); color: var(--txt); margin: 0; padding: 20px; }
-        .container { max-width: 1100px; margin: auto; }
-        .card { background: white; padding: 25px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 20px; }
-        h2 { margin-bottom: 20px; font-weight: 800; border-left: 5px solid var(--p-dark); padding-left: 15px; }
-        input, textarea { width: 100%; padding: 12px; margin: 8px 0; border: 2px solid #f1f5f9; border-radius: 12px; outline: none; background: #f8fafc; }
-        input:focus { border-color: var(--p-dark); }
-        button { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: 800; cursor: pointer; background: var(--p); color: #856404; margin-top: 10px; }
-        button:hover { background: var(--p-dark); }
-        
-        .list-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }
-        .item-row { display: flex; align-items: center; justify-content: space-between; padding: 10px; background: #fff; border-radius: 12px; border: 1px solid #f1f5f9; margin-bottom: 10px; }
-        .item-row img { width: 40px; height: 40px; border-radius: 8px; object-fit: cover; }
-        .btn-del { background: #fee2e2; color: #ef4444; width: auto; padding: 5px 12px; margin: 0; font-size: 11px; }
+        body { font-family: sans-serif; background: #f4f7f6; padding: 20px; }
+        .card { background: white; padding: 20px; border-radius: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        input, textarea { width: 100%; padding: 10px; margin: 10px 0; border: 1px solid #ddd; border-radius: 8px; }
+        button { background: #FDD835; border: none; padding: 10px 20px; border-radius: 8px; font-weight: bold; cursor: pointer; }
+        .item { display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding: 10px 0; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;">
-        <h1>Admin Control 👑</h1>
-        <a href="/" style="text-decoration:none; font-weight:800; color:var(--p-dark);">← Balik Website</a>
-    </div>
-
-    <div class="list-grid">
-        <div class="card">
-            <h2>🖼️ Tambah Album</h2>
-            <input type="text" id="albN" placeholder="Nama Album/Artis">
-            <input type="text" id="albU" placeholder="URL Gambar Album">
-            <button onclick="saveAlb()">Simpan Album</button>
-            <div id="albList" style="margin-top:20px;"></div>
-        </div>
-
-        <div class="card">
-            <h2>🎵 Tambah Lirik</h2>
-            <input type="text" id="sT" placeholder="Tajuk Lagu">
-            <input type="text" id="sA" placeholder="Nama Artis">
-            <input type="text" id="sAu" placeholder="URL Audio (Optional)">
-            <textarea id="sL" rows="4" placeholder="Lirik..."></textarea>
-            <button onclick="saveSong()">Terbitkan Lirik</button>
-        </div>
+    <div class="card">
+        <h2>🖼️ Urus Album</h2>
+        <input type="text" id="an" placeholder="Nama Album">
+        <input type="text" id="au" placeholder="URL Gambar Album">
+        <button onclick="addA()">Tambah Album</button>
+        <div id="alList"></div>
     </div>
 
     <div class="card">
-        <h2>📂 Urus Semua Lagu</h2>
-        <div id="songList"></div>
+        <h2>🎵 Tambah Lirik & YouTube</h2>
+        <input type="text" id="st" placeholder="Tajuk Lagu">
+        <input type="text" id="sa" placeholder="Artis">
+        <input type="text" id="sy" placeholder="Link YouTube (Cth: https://www.youtube.com/watch?v=...)">
+        <textarea id="sl" rows="5" placeholder="Lirik lagu..."></textarea>
+        <button onclick="addS()">Publish</button>
     </div>
-</div>
 
-<script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    <div class="card">
+        <h2>📂 Senarai Lagu</h2>
+        <div id="snList"></div>
+    </div>
 
-    const firebaseConfig = {
-        apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
-        authDomain: "meowlyrics-6eacb.firebaseapp.com",
-        projectId: "meowlyrics-6eacb",
-        appId: "1:183440345480:web:4fb71060be2cc24df0923d"
-    };
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    const app = initializeApp(firebaseConfig);
-    const db = getFirestore(app);
+        const firebaseConfig = {
+            apiKey: "AIzaSyDjjVB2w9W7si7BYDQj6OxGF7CYDOv42OA",
+            authDomain: "meowlyrics-6eacb.firebaseapp.com",
+            projectId: "meowlyrics-6eacb",
+            appId: "1:183440345480:web:4fb71060be2cc24df0923d"
+        };
 
-    // ALBUM FUNCTIONS
-    window.saveAlb = async () => {
-        const name = document.getElementById('albN').value;
-        const url = document.getElementById('albU').value;
-        if(name && url) {
-            await addDoc(collection(db, "albums"), { name, url });
-            alert("Album ditambah!");
-            document.getElementById('albN').value = ''; document.getElementById('albU').value = '';
-        }
-    };
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
 
-    onSnapshot(collection(db, "albums"), s => {
-        const div = document.getElementById('albList');
-        div.innerHTML = '<b>Senarai Album:</b>';
-        s.forEach(d => {
-            div.innerHTML += `
-                <div class="item-row">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="${d.data().url}">
-                        <span>${d.data().name}</span>
-                    </div>
-                    <button class="btn-del" onclick="delDoc('albums', '${d.id}')">Hapus</button>
-                </div>`;
+        // Album Logic
+        window.addA = async () => {
+            await addDoc(collection(db, "albums"), { name: document.getElementById('an').value, url: document.getElementById('au').value });
+            alert("Album Added!");
+        };
+
+        onSnapshot(collection(db, "albums"), s => {
+            document.getElementById('alList').innerHTML = s.docs.map(d => `<div class="item">${d.data().name} <button onclick="del('albums','${d.id}')">Padam</button></div>`).join('');
         });
-    });
 
-    // SONG FUNCTIONS
-    window.saveSong = async () => {
-        const title = document.getElementById('sT').value;
-        const artist = document.getElementById('sA').value;
-        const lyrics = document.getElementById('sL').value;
-        if(title && artist && lyrics) {
-            await addDoc(collection(db, "songs"), { title, artist, lyrics, audioUrl: document.getElementById('sAu').value, likes: 0, createdAt: serverTimestamp() });
-            alert("Lirik ditambah!");
-            document.getElementById('sT').value = ''; document.getElementById('sA').value = ''; document.getElementById('sL').value = '';
-        }
-    };
+        // Song Logic
+        window.addS = async () => {
+            await addDoc(collection(db, "songs"), {
+                title: document.getElementById('st').value,
+                artist: document.getElementById('sa').value,
+                ytUrl: document.getElementById('sy').value,
+                lyrics: document.getElementById('sl').value,
+                likes: 0, createdAt: serverTimestamp()
+            });
+            alert("Song Published!");
+        };
 
-    onSnapshot(collection(db, "songs"), s => {
-        const div = document.getElementById('songList');
-        div.innerHTML = '';
-        s.forEach(d => {
-            div.innerHTML += `
-                <div class="item-row">
-                    <div><b>${d.data().title}</b> - ${d.data().artist}</div>
-                    <button class="btn-del" onclick="delDoc('songs', '${d.id}')">Hapus</button>
-                </div>`;
+        onSnapshot(collection(db, "songs"), s => {
+            document.getElementById('snList').innerHTML = s.docs.map(d => `<div class="item">${d.data().title} <button onclick="del('songs','${d.id}')">Padam</button></div>`).join('');
         });
-    });
 
-    window.delDoc = async (col, id) => {
-        if(confirm("Betul nak hapus?")) await deleteDoc(doc(db, col, id));
-    };
-</script>
+        window.del = async (c, i) => { if(confirm("Hapus?")) await deleteDoc(doc(db, c, i)); };
+    </script>
 </body>
 </html>
